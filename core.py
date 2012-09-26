@@ -37,5 +37,5 @@ class IRCBot:
         #change eventually to log in a file but for now print is fine
         print stringToLog
 
-ircbot = IRCBot_core('irc.freenode.net', 6667, '#progether', 'tmpircbotname')
+ircbot = IRCBot('irc.freenode.net', 6667, '#progether', 'tmpircbotname')
 ircbot.run()
