@@ -1,5 +1,4 @@
 import re
-import commands.speak
 
 commandList = dict()
 def command(commandName, **options):
@@ -8,6 +7,7 @@ def command(commandName, **options):
             return f
         return decorator
 
+from commands import * 
 
 class CommandModule:
     def __init__(self, ircHelper):
