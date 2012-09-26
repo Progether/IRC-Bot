@@ -9,6 +9,8 @@ def command(commandName, **options):
 
 from commands import * 
 
+#Everything above this line is ugly and someone cleverer than me should fix it. I mean, global variables? what was I thinking?
+
 class CommandModule:
     def __init__(self, ircHelper):
         self.regexSplitCommand = re.compile(r"!!(?P<command>\w+)\s(?P<arguments>.*).*")
@@ -22,4 +24,3 @@ class CommandModule:
             commandArguments = split.group('arguments')
             if commandList.has_key(commandName):
                 commandList[commandName](self.ircHelper, commandArguments)
-            print commandName + "---" + commandArguments
