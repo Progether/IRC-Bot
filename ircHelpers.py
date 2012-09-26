@@ -4,6 +4,6 @@ class IRCHelper:
 
         self.channel = self.ircbot.channel
 
-    def send(thingToSend):
+    def send(self, thingToSend):
         self.ircbot.socket.send(thingToSend)
         

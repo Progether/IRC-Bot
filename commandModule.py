@@ -13,8 +13,9 @@ class CommandModule:
         
     def runCommand(self, command):
         split = self.regexSplitCommand.match(command)
-        commandName = split.group('command')
-        commandArguments = split.group('arguments')
-        if self.commands.has_key(commandName):
-            self.commands[commandName](self.ircHelper, commandArguments)
-        print commandName + "---" + commandArguments
+        if split:
+            commandName = split.group('command')
+            commandArguments = split.group('arguments')
+            if self.commands.has_key(commandName):
+                self.commands[commandName](self.ircHelper, commandArguments)
+            print commandName + "---" + commandArguments
