@@ -1,7 +1,12 @@
-# Just displays the reddit link for Progether
+from core import ircBot
+import ircHelpers
 
-from commandModule import command
+@ircBot.registerCommand('faq')
+class Faq:
+    def __init__(self):
+        self.channel = ircHelpers.getChannel()
 
-@command('faq')
-def speak(ircHelper, arguments):
-    ircHelper.send('PRIVMSG %s :%s\r\n' % (ircHelper.channel, "http://code.reddit.com/wiki/help/faqs/progether"))
+    def onRun(self, arguments):
+        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "http://code.reddit.com/wiki/help/faqs/progether")
+        ircHelpers.send(command)
+        

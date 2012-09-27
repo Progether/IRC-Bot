@@ -1,7 +1,12 @@
-# Just displays the reddit link for Progether
+from core import ircBot
+import ircHelpers
 
-from commandModule import command
+@ircBot.registerCommand('git')
+class Git:
+    def __init__(self):
+        self.channel = ircHelpers.getChannel()
 
-@command('git')
-def speak(ircHelper, arguments):
-    ircHelper.send('PRIVMSG %s :%s\r\n' % (ircHelper.channel, "https://github.com/Progether"))
+    def onRun(self, arguments):
+        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "https://github.com/Progether")
+        ircHelpers.send(command)
+        

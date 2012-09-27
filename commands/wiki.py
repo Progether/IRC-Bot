@@ -1,7 +1,12 @@
-# Just displays the reddit link for Progether
+from core import ircBot
+import ircHelpers
 
-from commandModule import command
+@ircBot.registerCommand('wiki')
+class Wiki:
+    def __init__(self):
+        self.channel = ircHelpers.getChannel()
 
-@command('wiki')
-def speak(ircHelper, arguments):
-    ircHelper.send('PRIVMSG %s :%s\r\n' % (ircHelper.channel, "http://http://progether.wikia.com/wiki/Progether_Wiki/"))
+    def onRun(self, arguments):
+        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "http://http://progether.wikia.com/wiki/Progether_Wiki/")
+        ircHelpers.send(command)
+        

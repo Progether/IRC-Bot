@@ -1,7 +1,6 @@
 import socket, re
 
 from commandModule import CommandModule
-from ircHelpers import IRCHelper
 
 class IRCBot:
     def __init__(self, network, port, channel, nickname, tempCacheSize=4096):
@@ -13,9 +12,7 @@ class IRCBot:
 
         self.tempCacheSize = tempCacheSize
 
-        self.ircHelper = IRCHelper(self)
-
-        self.commandModule = CommandModule(self.ircHelper)
+        self.commandModule = CommandModule()
         self.regexIsCommand = re.compile(r".*(?P<command>!!.*)")
 
 
@@ -51,5 +48,10 @@ class IRCBot:
         #change eventually to log in a file but for now print is fine
         print stringToLog
 
-ircbot = IRCBot('irc.freenode.net', 6667, '#progether', 'WorkingIRCBot')
-ircbot.run()
+    def registerCommand(self, commandName, **options):
+        def decorator(f):
+            self.commandModule.commandList[commandName] = f()
+            return f
+        return decorator
+
+ircBot = IRCBot('irc.freenode.net', 6667, '#progether', 'WorkingIRCBot')
