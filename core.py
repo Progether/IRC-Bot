@@ -51,5 +51,10 @@ class IRCBot:
         #change eventually to log in a file but for now print is fine
         print stringToLog
 
-ircbot = IRCBot('irc.freenode.net', 6667, '#progether', 'WorkingIRCBot')
-ircbot.run()
+    def registerCommand(self, commandName, **options):
+        def decorator(f):
+            self.commandModule.commandList[commandName] = f(self.ircHelper) #ugly, please change, really this method should be inside commandModule, but I dont know how to then call it as a decorator
+            return f
+        return decorator
+
+ircBot = IRCBot('irc.freenode.net', 6667, '#progether', 'WorkingIRCBot')
