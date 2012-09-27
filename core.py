@@ -1,7 +1,6 @@
 import socket, re
 
 from commandModule import CommandModule
-from ircHelpers import IRCHelper
 
 class IRCBot:
     def __init__(self, network, port, channel, nickname, tempCacheSize=4096):
@@ -13,9 +12,7 @@ class IRCBot:
 
         self.tempCacheSize = tempCacheSize
 
-        self.ircHelper = IRCHelper(self)
-
-        self.commandModule = CommandModule(self.ircHelper)
+        self.commandModule = CommandModule()
         self.regexIsCommand = re.compile(r".*(?P<command>!!.*)")
 
 
@@ -53,7 +50,7 @@ class IRCBot:
 
     def registerCommand(self, commandName, **options):
         def decorator(f):
-            self.commandModule.commandList[commandName] = f(self.ircHelper) #ugly, please change, really this method should be inside commandModule, but I dont know how to then call it as a decorator
+            self.commandModule.commandList[commandName] = f()
             return f
         return decorator
 

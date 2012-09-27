@@ -1,11 +1,8 @@
 import re
 
 class CommandModule:
-    def __init__(self, ircHelper):
+    def __init__(self):
         self.commandList = dict()
-
-        self.ircHelper = ircHelper
-
         self.regexSplitCommand = re.compile(r"!!(?P<command>\w+)\s(?P<arguments>.*).*")
 
     def runCommand(self, command):

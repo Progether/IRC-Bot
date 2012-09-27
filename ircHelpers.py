@@ -1,11 +1,18 @@
-class IRCHelper:
-    def __init__(self, ircbot):
-        self.ircbot = ircbot
+from core import ircBot
 
-        self.network = self.ircbot.network
-        self.port = self.ircbot.port
-        self.channel = self.ircbot.channel
-        self.nickname = self.ircbot.nickname
+def getNetwork():
+    return ircBot.network
 
-    def send(self, thingToSend):
-        self.ircbot.socket.send(thingToSend)
+def getPort():
+    return ircBot.port
+
+def getChannel():
+    return ircBot.channel
+
+def getNick():
+    return ircBot.nickname
+
+def send(thingToSend):
+    ircBot.socket.send(thingToSend)
+
+
