@@ -1,6 +1,7 @@
 import socket, re
 
 from commandModule import CommandModule
+from behaviourModule import BehaviourModule
 
 class IRCBot:
     def __init__(self, network, port, channel, nickname, tempCacheSize=4096):
@@ -12,6 +13,7 @@ class IRCBot:
 
         self.tempCacheSize = tempCacheSize
 
+        self.behaviourModule = BehaviourModule()
         self.commandModule = CommandModule()
         self.regexIsCommand = re.compile(r".*(?P<command>!!.*)")
 
@@ -34,6 +36,7 @@ class IRCBot:
             if isCommand:
                 self.commandModule.runCommand(isCommand.group('command'))
             
+	    self.behaviourModule.performBehaviours(recievedData)
             #temporary quit method, should be changed so only admins can use
             if recievedData.find('!!quit') != -1:
                 self.log("Quitting")
@@ -53,5 +56,12 @@ class IRCBot:
             self.commandModule.commandList[commandName] = f()
             return f
         return decorator
+
+    def registerBehaviour(self, **options):
+        def decorator(f):
+            self.behaviourModule.behaviourList.append(f())
+            return f
+        return decorator
+
 
 ircBot = IRCBot('irc.freenode.net', 6667, '#progether', 'WorkingIRCBot')
