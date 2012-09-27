@@ -3,15 +3,12 @@ import socket, re
 from commandModule import CommandModule
 from behaviourModule import BehaviourModule
 
-from settings import read_config
-
 class IRCBot:
-    def __init__(self, tempCacheSize=4096):
-        conf = read_config()
-        self.network = conf['network']
-        self.port = int(conf['port'])
-        self.channel = conf['channel']
-        self.nickname = conf['nick']
+    def __init__(self, network, port, channel, nickname, tempCacheSize=4096):
+        self.network = network
+        self.port = port
+        self.channel = channel
+        self.nickname = nickname
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         self.tempCacheSize = tempCacheSize
@@ -67,4 +64,4 @@ class IRCBot:
         return decorator
 
 
-ircBot = IRCBot()
+ircBot = IRCBot('irc.freenode.net', 6667, '#progether', 'WorkingIRCBot')
