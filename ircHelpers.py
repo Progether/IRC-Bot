@@ -16,8 +16,10 @@ def send(thingToSend):
     ircBot.socket.send(thingToSend)
 
 def sayInChannel(thingToSay):
-    ircBot.socket.send('PRIVMSG %s :%s\r\n' % (getChannel(), thingToSay))
+    send('PRIVMSG %s :%s\r\n' % (getChannel(), thingToSay))
 
 def privateMessage(user, message):
-    ircBot.socket.send('PRIVMSG %s :%s\r\n' % (user, message))
+    send('PRIVMSG %s :%s\r\n' % (user, message))
 
+def callForUsers():
+    send('NAMES %s\r\n' % getChannel())
