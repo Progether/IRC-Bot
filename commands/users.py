@@ -7,5 +7,5 @@ class Speak:
         self.ircHelper = ircHelpers
         self.channel = self.ircHelper.getChannel()
         
-    def onRun(self, arguments):
+    def onRun(self, arguments, messageInfo):
         self.ircHelper.callForUsers()

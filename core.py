@@ -43,9 +43,9 @@ class IRCBot:
                 messageInfo['channel'] = isChat.group('channel')
                 messageInfo['message'] = isChat.group('message')
 
-            isCommand = self.regexIsCommand.match(messageInfo['message'])
-            if isCommand:
-                self.commandModule.runCommand(isCommand.group('command'), messageInfo)
+                isCommand = self.regexIsCommand.match(messageInfo['message'])
+                if isCommand:
+                    self.commandModule.runCommand(isCommand.group('command'), messageInfo)
 
             self.behaviourModule.performBehaviours(recievedData)
             
