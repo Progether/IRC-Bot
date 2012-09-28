@@ -18,9 +18,9 @@ class IRCBot:
 
         self.behaviourModule = BehaviourModule()
         self.commandModule = CommandModule()
+        
         self.regexIsCommand = re.compile(r"(?P<command>!!..+)")
-
-	self.regexIsChat = re.compile(r":(?P<user>\w+)!~(?P<isp>.+)\sPRIVMSG\s(?P<channel>[\w#]+)\s:(?P<message>.+)")
+        self.regexIsChat = re.compile(r":(?P<user>\w+)!~(?P<isp>.+)\sPRIVMSG\s(?P<channel>[\w#]+)\s:(?P<message>.+)")
 
     def run(self):
         self.socket.connect((self.network, self.port))
@@ -35,19 +35,20 @@ class IRCBot:
             recievedData = self.socket.recv(self.tempCacheSize)
             self.log(recievedData)
 
-	    messageInfo = dict()
-	    isChat = self.regexIsChat.match(recievedData)
-	    if isChat:
-		messageInfo['user'] = isChat.group('user')
-		messageInfo['isp'] = isChat.group('isp')
-		messageInfo['channel'] = isChat.group('channel')
-		messageInfo['message'] = isChat.group('message')
+            messageInfo = dict()
+            isChat = self.regexIsChat.match(recievedData)
+            if isChat:
+                messageInfo['user'] = isChat.group('user')
+                messageInfo['isp'] = isChat.group('isp')
+                messageInfo['channel'] = isChat.group('channel')
+                messageInfo['message'] = isChat.group('message')
 
-                isCommand = self.regexIsCommand.match(messageInfo['message'])
-                if isCommand:
-                    self.commandModule.runCommand(isCommand.group('command'), messageInfo)
+            isCommand = self.regexIsCommand.match(messageInfo['message'])
+            if isCommand:
+                self.commandModule.runCommand(isCommand.group('command'), messageInfo)
 
-	    self.behaviourModule.performBehaviours(recievedData)
+            self.behaviourModule.performBehaviours(recievedData)
+            
             #temporary quit method, should be changed so only admins can use
             if recievedData.find('!!quit') != -1:
                 self.log("Quitting")

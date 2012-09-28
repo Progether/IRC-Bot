@@ -4,6 +4,6 @@ class BehaviourModule:
         self.behaviourList = list()
 
     def performBehaviours(self, data):
-	for behaviour in self.behaviourList:
-		behaviour.perform(data)
+        for behaviour in self.behaviourList:
+            behaviour.perform(data)
 
