@@ -11,5 +11,6 @@ class Hello:
     def perform(self, data):
         match = self.regex.match(data)
         if match:
-            ircHelpers.sayInChannel('Hello %s!' % match.group('user'))
+            if match.group('user') != ircHelpers.getNick():
+                ircHelpers.sayInChannel('Hello %s!' % match.group('user'))
  
