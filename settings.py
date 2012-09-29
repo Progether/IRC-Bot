@@ -7,7 +7,8 @@ def create_config():
                     nick = tmpircbotname
                     port = 6667
                     network = irc.freenode.net
-                    channel = #progether
+                    channel = ##reddit-progether
+                    password = 1234test
                     """
     file_content = file_content.splitlines()
     for line in file_content:
@@ -22,6 +23,7 @@ def read_config():
     config['network'] = config_file.get('settings', 'network')
     config['port'] = config_file.get('settings', 'port')
     config['channel'] = config_file.get('settings', 'channel')
+    config['password'] = config_file.get('settings', 'password')
     return config
     
     
@@ -33,3 +35,4 @@ if __name__ == '__main__':
     print conf['network']
     print conf['port']
     print conf['channel']
+    print conf['password']
