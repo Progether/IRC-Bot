@@ -7,6 +7,6 @@ class IRC:
         self.channel = ircHelpers.getChannel()
 
     def onRun(self, arguments, messageInfo):
-        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "server: irc.freenode.net, channel: #progether")
+        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "server: irc.freenode.net, channel: #reddit-progether")
         ircHelpers.send(command)
         

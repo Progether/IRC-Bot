@@ -1,4 +1,4 @@
-import socket, re
+import socket, re, time
 
 from commandModule import CommandModule
 from behaviourModule import BehaviourModule
@@ -12,6 +12,7 @@ class IRCBot:
         self.port = int(conf['port'])
         self.channel = conf['channel']
         self.nickname = conf['nick']
+        self.password = conf['password']
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         self.tempCacheSize = tempCacheSize
@@ -28,13 +29,16 @@ class IRCBot:
         self.socket.send('NICK %s \r\n' % self.nickname)
         self.socket.send('USER %s some stuff :Python IRC\r\n' % self.nickname)#change this
         self.socket.send('JOIN %s \r\n' % self.channel)
+        
+        # need to register bot nick bofre you can use this. If you'd rather skip register comment out next lines.
+        self.socket.send('PRIVMSG NickServ :IDENTIFY %s %s\r\n' % (self.nickname, self.password))
+        
         self.mainLoop()
 
     def mainLoop(self):
         while True:
             recievedData = self.socket.recv(self.tempCacheSize)
-            self.log(recievedData)
-
+            #self.log(recievedData)
             messageInfo = dict()
             isChat = self.regexIsChat.match(recievedData)
             if isChat:
@@ -58,6 +62,9 @@ class IRCBot:
             #make sure we don't time out of server
             if recievedData.find('PING') != -1:
                 self.socket.send('PONG %s \r\n' % recievedData.split()[1])
+            else:
+                # moved log here to filter out ping/pong chatter
+                self.log(recievedData)
 
     def log(self, stringToLog):
         #change eventually to log in a file but for now print is fine
