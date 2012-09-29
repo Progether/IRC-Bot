@@ -7,6 +7,6 @@ class Wiki:
         self.channel = ircHelpers.getChannel()
 
     def onRun(self, arguments, messageInfo):
-        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "http://http://progether.wikia.com/wiki/Progether_Wiki/")
+        command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], "http://http://progether.wikia.com/wiki/Progether_Wiki/")
         ircHelpers.send(command)
         

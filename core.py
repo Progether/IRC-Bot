@@ -24,7 +24,7 @@ class IRCBot:
         self.commandModule = CommandModule()
         
         self.regexIsCommand = re.compile(r"(?P<command>!!..+)")
-        self.regexIsChat = re.compile(r":(?P<user>\w+)!~(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
+        self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
 
     def run(self):
         self.socket.connect((self.network, self.port))

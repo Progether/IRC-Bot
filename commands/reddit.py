@@ -7,6 +7,6 @@ class Reddit:
         self.channel = ircHelpers.getChannel()
 
     def onRun(self, arguments, messageInfo):
-        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "http://reddit.com/r/progether/")
+        command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], "http://reddit.com/r/progether/")
         ircHelpers.send(command)
         
