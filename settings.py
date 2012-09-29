@@ -10,7 +10,7 @@ def create_config():
                     port = 6667
                     network = irc.freenode.net
                     quit = !!quit
-                    channel = ##reddit-progether
+                    channel = #reddit-progether
                     password = 1234test
                     """
     file_content = file_content.splitlines()
