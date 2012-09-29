@@ -1,4 +1,4 @@
-import socket, re, time
+import socket, re
 
 from commandModule import CommandModule
 from behaviourModule import BehaviourModule
@@ -21,7 +21,7 @@ class IRCBot:
         self.commandModule = CommandModule()
         
         self.regexIsCommand = re.compile(r"(?P<command>!!..+)")
-        self.regexIsChat = re.compile(r":(?P<user>\w+)!~(?P<isp>.+)\sPRIVMSG\s(?P<channel>[\w#]+)\s:(?P<message>.+)")
+        self.regexIsChat = re.compile(r":(?P<user>\w+)!~(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
 
     def run(self):
         self.socket.connect((self.network, self.port))
@@ -37,10 +37,10 @@ class IRCBot:
 
     def mainLoop(self):
         while True:
-            recievedData = self.socket.recv(self.tempCacheSize)
+            receivedData = self.socket.recv(self.tempCacheSize)
             #self.log(recievedData)
             messageInfo = dict()
-            isChat = self.regexIsChat.match(recievedData)
+            isChat = self.regexIsChat.match(receivedData)
             if isChat:
                 messageInfo['user'] = isChat.group('user')
                 messageInfo['isp'] = isChat.group('isp')
@@ -51,20 +51,20 @@ class IRCBot:
                 if isCommand:
                     self.commandModule.runCommand(isCommand.group('command'), messageInfo)
 
-            self.behaviourModule.performBehaviours(recievedData)
+            self.behaviourModule.performBehaviours(receivedData)
             
             #temporary quit method, should be changed so only admins can use
-            if recievedData.find('!!quit') != -1:
+            if receivedData.find('!!quit') != -1:
                 self.log("Quitting")
                 self.socket.send('QUIT\r\n')
                 break
             
             #make sure we don't time out of server
-            if recievedData.find('PING') != -1:
-                self.socket.send('PONG %s \r\n' % recievedData.split()[1])
+            if receivedData.find('PING') != -1:
+                self.socket.send('PONG %s \r\n' % receivedData.split()[1])
             else:
                 # moved log here to filter out ping/pong chatter
-                self.log(recievedData)
+                self.log(receivedData)
 
     def log(self, stringToLog):
         #change eventually to log in a file but for now print is fine
