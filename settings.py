@@ -7,7 +7,7 @@ def create_config():
                     nick = tmpircbotname
                     port = 6667
                     network = irc.freenode.net
-                    channel = ##ProgetherBotTest
+                    channel = ##reddit-progether
                     password = 1234test
                     """
     file_content = file_content.splitlines()
