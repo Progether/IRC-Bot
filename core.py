@@ -1,4 +1,5 @@
 import socket, re
+import chatLog
 
 from commandModule import CommandModule
 from behaviourModule import BehaviourModule
@@ -11,11 +12,13 @@ class IRCBot:
         self.network = conf['network']
         self.port = int(conf['port'])
         self.channel = conf['channel']
+        self.quitCmd = conf['quit']
         self.nickname = conf['nick']
         self.password = conf['password']
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         self.tempCacheSize = tempCacheSize
+        self.cLog = chatLog.ChatLog()
 
         self.behaviourModule = BehaviourModule()
         self.commandModule = CommandModule()
@@ -54,7 +57,7 @@ class IRCBot:
             self.behaviourModule.performBehaviours(receivedData)
             
             #temporary quit method, should be changed so only admins can use
-            if receivedData.find('!!quit') != -1:
+            if receivedData.find(self.quitCmd) != -1:
                 self.log("Quitting")
                 self.socket.send('QUIT\r\n')
                 break
@@ -69,6 +72,7 @@ class IRCBot:
     def log(self, stringToLog):
         #change eventually to log in a file but for now print is fine
         print stringToLog
+        self.cLog.addLog(stringToLog)
 
     def registerCommand(self, commandName, **options):
         def decorator(f):
