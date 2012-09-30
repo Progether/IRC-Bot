@@ -7,6 +7,6 @@ class Speak:
         self.channel = ircHelpers.getChannel()
         
     def onRun(self, arguments, messageInfo):
-        command = 'PRIVMSG %s :%s\r\n' % (self.channel, messageInfo['user'] + ' told me to say ' + arguments)
+        command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], messageInfo['user'] + ' told me to say ' + arguments)
         ircHelpers.send(command)
         

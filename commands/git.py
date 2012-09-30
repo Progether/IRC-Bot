@@ -7,6 +7,6 @@ class Git:
         self.channel = ircHelpers.getChannel()
 
     def onRun(self, arguments, messageInfo):
-        command = 'PRIVMSG %s :%s\r\n' % (self.channel, "https://github.com/Progether")
+        command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], "https://github.com/Progether")
         ircHelpers.send(command)
         

@@ -1,12 +1,11 @@
 from core import ircBot
 import ircHelpers
 
-@ircBot.registerCommand('faq')
-class Faq:
+@ircBot.registerCommand('join')
+class Reddit:
     def __init__(self):
         self.channel = ircHelpers.getChannel()
 
     def onRun(self, arguments, messageInfo):
-        command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], "http://code.reddit.com/wiki/help/faqs/progether")
+        command = 'JOIN %s \r\n' % arguments
         ircHelpers.send(command)
-        
