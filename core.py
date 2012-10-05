@@ -1,9 +1,6 @@
 import socket, re
 import chatLog
 
-from commandModule import CommandModule
-from behaviourModule import BehaviourModule
-
 from settings import read_config
 
 class IRCBot:
@@ -20,10 +17,10 @@ class IRCBot:
         self.tempCacheSize = tempCacheSize
         self.cLog = chatLog.ChatLog()
 
-        self.behaviourModule = BehaviourModule()
-        self.commandModule = CommandModule()
-        
+        self.addonList = list()
+
         self.regexIsCommand = re.compile(r"(?P<command>!!..+)")
+        self.regexCommandSplitCommand = re.compile(r"!!(?P<command>\w+)\s(?P<arguments>.*).*")
         self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
 
     def run(self):
@@ -52,9 +49,16 @@ class IRCBot:
 
                 isCommand = self.regexIsCommand.match(messageInfo['message'])
                 if isCommand:
-                    self.commandModule.runCommand(isCommand.group('command'), messageInfo)
+                    split = self.regexCommandSplitCommand.match(messageInfo['message'])
+                    commandName = split.group('command')
+                    commandArguments = split.group('arguments')
+                    for addon in self.addonList:
+                        if addon.commandList.has_key(commandName):
+                            addon.commandList[commandName](addon, commandArguments, messageInfo)
 
-            self.behaviourModule.performBehaviours(receivedData)
+            for addon in self.addonList:
+                for behaviour in addon.behaviourList:
+                    behaviour(addon, receivedData)
             
             #temporary quit method, should be changed so only admins can use
             if receivedData.find(self.quitCmd) != -1:
@@ -74,15 +78,27 @@ class IRCBot:
         print stringToLog
         self.cLog.addLog(stringToLog)
 
-    def registerCommand(self, commandName, **options):
+    def registerAddon(self, **options):
         def decorator(f):
-            self.commandModule.commandList[commandName] = f()
+            self.addonList.append(f())
             return f
         return decorator
 
+class AddonBase:
+    commandList = dict()
+    behaviourList = list()
+
+    @classmethod
     def registerBehaviour(self, **options):
         def decorator(f):
-            self.behaviourModule.behaviourList.append(f())
+            self.behaviourList.append(f)
+            return f
+        return decorator
+
+    @classmethod
+    def registerCommand(self, commandName, **options):
+        def decorator(f):
+            self.commandList[commandName] = f
             return f
         return decorator
 

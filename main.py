@@ -1,5 +1,4 @@
 from core import ircBot
-from commands import *
-from behaviours import *
+from addons import *
 
 ircBot.run()
