@@ -54,11 +54,11 @@ class IRCBot:
                     commandArguments = split.group('arguments')
                     for addon in self.addonList:
                         if addon.commandList.has_key(commandName):
-                            addon.commandList[commandName](addon, commandArguments, messageInfo)
+                            addon.commandList[commandName](commandArguments, messageInfo)
 
             for addon in self.addonList:
                 for behaviour in addon.behaviourList:
-                    behaviour(addon, receivedData)
+                    behaviour(receivedData)
             
             #temporary quit method, should be changed so only admins can use
             if receivedData.find(self.quitCmd) != -1:
@@ -87,20 +87,6 @@ class IRCBot:
 class AddonBase:
     commandList = dict()
     behaviourList = list()
-
-    @classmethod
-    def registerBehaviour(self, **options):
-        def decorator(f):
-            self.behaviourList.append(f)
-            return f
-        return decorator
-
-    @classmethod
-    def registerCommand(self, commandName, **options):
-        def decorator(f):
-            self.commandList[commandName] = f
-            return f
-        return decorator
 
 ircBot = IRCBot()
 
