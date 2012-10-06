@@ -1,5 +1,4 @@
 import socket, re
-import chatLog
 
 from settings import read_config
 
@@ -15,7 +14,6 @@ class IRCBot:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
         self.tempCacheSize = tempCacheSize
-        self.cLog = chatLog.ChatLog()
 
         self.addonList = list()
 
@@ -55,6 +53,10 @@ class IRCBot:
                     for addon in self.addonList:
                         if addon.commandList.has_key(commandName):
                             addon.commandList[commandName](commandArguments, messageInfo)
+                elif messageInfo['channel'] == self.channel:
+                    for addon in self.addonList:
+                        for messageMethod in addon.messageList:
+                            messageMethod(messageInfo)
 
             for addon in self.addonList:
                 for behaviour in addon.behaviourList:
@@ -76,7 +78,6 @@ class IRCBot:
     def log(self, stringToLog):
         #change eventually to log in a file but for now print is fine
         print stringToLog
-        self.cLog.addLog(stringToLog)
 
     def registerAddon(self, **options):
         def decorator(f):
@@ -87,6 +88,7 @@ class IRCBot:
 class AddonBase:
     commandList = dict()
     behaviourList = list()
+    messageList = list()
 
 ircBot = IRCBot()
 

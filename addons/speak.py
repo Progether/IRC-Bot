@@ -9,7 +9,8 @@ class Speak(AddonBase):
         self.channel = ircHelpers.getChannel()
         self.regex = re.compile(r":(?P<user>\w+)!~.+\sJOIN\s") 
 	self.commandList = {"say" : self.speak}
-	self.behaviourList = [self.sayHello] 
+	self.behaviourList = [self.sayHello]
+	self.messageList = [self.message]
 
     def sayHello(self, data):
         match = self.regex.match(data)
@@ -21,3 +22,5 @@ class Speak(AddonBase):
         command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], messageInfo['user'] + ' told me to say ' + arguments)
         ircHelpers.send(command)
         
+    def message(self, messageInfo):
+        ircHelpers.sayInChannel('Someone said something, was it you? %s!' % messageInfo['user'])
