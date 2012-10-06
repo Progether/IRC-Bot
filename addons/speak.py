@@ -1,22 +1,17 @@
 from core import ircBot, AddonBase
 import ircHelpers
 
-import re
-
 @ircBot.registerAddon()
 class Speak(AddonBase):
     def __init__(self):
         self.channel = ircHelpers.getChannel()
-        self.regex = re.compile(r":(?P<user>\w+)!~.+\sJOIN\s") 
 	self.commandList = {"say" : self.speak}
-	self.behaviourList = [self.sayHello]
 	self.messageList = [self.message]
+	self.joinList = [self.sayHello]
 
-    def sayHello(self, data):
-        match = self.regex.match(data)
-        if match:
-            if match.group('user') != ircHelpers.getNick():
-                ircHelpers.sayInChannel('Hello %s!' % match.group('user'))        
+    def sayHello(self, user):
+        if user != ircHelpers.getNick():
+            ircHelpers.sayInChannel('Hello %s!' % user)        
 
     def speak(self, arguments, messageInfo):
         command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], messageInfo['user'] + ' told me to say ' + arguments)

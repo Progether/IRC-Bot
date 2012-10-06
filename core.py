@@ -17,6 +17,7 @@ class IRCBot:
 
         self.addonList = list()
 
+        self.regexIsJoin = re.compile(r":(?P<user>\w+)!~.+\sJOIN\s")
         self.regexIsCommand = re.compile(r"(?P<command>!!..+)")
         self.regexCommandSplitCommand = re.compile(r"!!(?P<command>\w+)\s(?P<arguments>.*).*")
         self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
@@ -58,6 +59,12 @@ class IRCBot:
                         for messageMethod in addon.messageList:
                             messageMethod(messageInfo)
 
+            isJoin = self.regexIsJoin.match(receivedData)
+            if isJoin:
+                for addon in self.addonList:
+                    for joinMethod in addon.joinList:
+                        joinMethod(isJoin.group('user'))
+
             for addon in self.addonList:
                 for behaviour in addon.behaviourList:
                     behaviour(receivedData)
@@ -89,6 +96,7 @@ class AddonBase:
     commandList = dict()
     behaviourList = list()
     messageList = list()
+    joinList = list()
 
 ircBot = IRCBot()
 
