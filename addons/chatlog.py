@@ -16,7 +16,6 @@ class ChatLog(AddonBase):
         ircHelpers.sayInChannel('%s said %s' % (self.chatLog[-1]['user'], self.chatLog[-1]['message']))
 
     def readChatLog(self, arguments, messageInfo):
-        print "hello"
         index = -10
         while index <= -1:
             try:
