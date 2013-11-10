@@ -1,4 +1,4 @@
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 FILE_NAME = "settings.txt"
 
@@ -21,13 +21,12 @@ def create_config():
 def read_config():
     config = dict()
     config_file = ConfigParser()
-    config_file.read(FILE_NAME)
-    if not config_file.has_section('settings'):
-        print "Unable to read settings file at %s" % FILE_NAME
-        create_config()
+    try:
+      with open(FILE_NAME):
         config_file.read(FILE_NAME)
-        print "Created new settings file at %s" % FILE_NAME
-
+    except IOError:
+      create_config()
+      config_file.read(FILE_NAME)
     config['nick'] = config_file.get('settings', 'nick')
     config['network'] = config_file.get('settings', 'network')
     config['port'] = config_file.get('settings', 'port')
@@ -40,8 +39,8 @@ def read_config():
 if __name__ == '__main__':
     create_config()
     conf = read_config()
-    print conf['nick']
-    print conf['network']
-    print conf['port']
-    print conf['channel']
-    print conf['password']
+    print(conf['nick'])
+    print(conf['network'])
+    print(conf['port'])
+    print(conf['channel'])
+    print(conf['password'])

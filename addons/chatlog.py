@@ -4,10 +4,10 @@ import ircHelpers
 @ircBot.registerAddon()
 class ChatLog(AddonBase):
     def __init__(self):
-	self.commandList = {"lastmessage" : self.lastMessage, "readlog" : self.readChatLog}
-	self.messageList = [self.logMessage]
+      self.commandList = {"lastmessage" : self.lastMessage, "readlog" : self.readChatLog}
+      self.messageList = [self.logMessage]
+      self.chatLog = list()
 
-	self.chatLog = list()
 
     def logMessage(self, messageInfo):
         self.chatLog.append(messageInfo)
