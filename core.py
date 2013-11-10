@@ -24,7 +24,7 @@ class IRCBot:
 
     def run(self):
         self.socket.connect((self.network, self.port))
-        self.log(self.socket.recv(self.tempCacheSize))
+        self.log(self.socket.recv(self.tempCacheSize).decode("UTF-8"))
         string = 'NICK %s \r\n' % self.nickname
         self.socket.send(string.encode("UTF-8"))
         string = 'USER %s some stuff :Python IRC\r\n' % self.nickname
