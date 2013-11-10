@@ -1,1 +1,1 @@
-worker: while true; do ../usr/local/bin/python ./main.py; done;
+worker: while true; do python ./main.py; done;
