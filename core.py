@@ -25,18 +25,21 @@ class IRCBot:
     def run(self):
         self.socket.connect((self.network, self.port))
         self.log(self.socket.recv(self.tempCacheSize))
-        self.socket.send('NICK %s \r\n' % self.nickname)
-        self.socket.send('USER %s some stuff :Python IRC\r\n' % self.nickname)#change this
-        self.socket.send('JOIN %s \r\n' % self.channel)
+        string = 'NICK %s \r\n' % self.nickname
+        self.socket.send(string.encode("UTF-8"))
+        string = 'USER %s some stuff :Python IRC\r\n' % self.nickname
+        self.socket.send(string.encode("UTF-8"))
+        string = 'JOIN %s \r\n' % self.channel
+        self.socket.send(string.encode("UTF-8"))
         
         # need to register bot nick bofre you can use this. If you'd rather skip register comment out next lines.
-        self.socket.send('PRIVMSG NickServ :IDENTIFY %s %s\r\n' % (self.nickname, self.password))
+        #self.socket.send('PRIVMSG NickServ :IDENTIFY %s %s\r\n' % (self.nickname, self.password))
         
         self.mainLoop()
 
     def mainLoop(self):
         while True:
-            receivedData = self.socket.recv(self.tempCacheSize)
+            receivedData = self.socket.recv(self.tempCacheSize).decode("UTF-8")
             #self.log(recievedData)
             messageInfo = dict()
             isChat = self.regexIsChat.match(receivedData)
@@ -52,8 +55,8 @@ class IRCBot:
                     commandName = split.group('command')
                     commandArguments = split.group('arguments')
                     for addon in self.addonList:
-                        if addon.commandList.has_key(commandName):
-                            addon.commandList[commandName](commandArguments, messageInfo)
+                      if commandName in addon.commandList:
+                        addon.commandList[commandName](commandArguments, messageInfo)
                 elif messageInfo['channel'] == self.channel:
                     for addon in self.addonList:
                         for messageMethod in addon.messageList:
@@ -72,19 +75,21 @@ class IRCBot:
             #temporary quit method, should be changed so only admins can use
             if receivedData.find(self.quitCmd) != -1:
                 self.log("Quitting")
-                self.socket.send('QUIT\r\n')
+                string = 'QUIT\r\n'
+                self.socket.send(string.encode("UTF-8"))
                 break
             
             #make sure we don't time out of server
             if receivedData.find('PING') != -1:
-                self.socket.send('PONG %s \r\n' % receivedData.split()[1])
+                string = 'PONG %s \r\n' % receivedData.split()[1]
+                self.socket.send(string.encode("UTF-8"))
             else:
                 # moved log here to filter out ping/pong chatter
                 self.log(receivedData)
 
     def log(self, stringToLog):
         #change eventually to log in a file but for now print is fine
-        print stringToLog
+        print(stringToLog)
 
     def registerAddon(self, **options):
         def decorator(f):
