@@ -1,7 +1,8 @@
 from configparser import ConfigParser
 import os
 
-FILE_NAME = "settings.txt"
+current_directory = os.getcwd()
+FILE_NAME = "%s/settings.txt" % current_directory
 
 def create_config():
     config_file = open(FILE_NAME, 'w')
