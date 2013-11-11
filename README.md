@@ -31,6 +31,11 @@ Todo
 
 Changelog
 -----------
+Nov10
+
+ 1. fix for join message
+ 1. changed speak to relay and added speak
+
 Nov09
 
  1. Converted to python3

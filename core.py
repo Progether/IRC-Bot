@@ -12,19 +12,20 @@ class IRCBot:
         self.nickname = conf['nick']
         self.password = conf['password']
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.bot_command = conf['bot_command']
         
         self.tempCacheSize = tempCacheSize
 
         self.addonList = list()
 
-        self.regexIsJoin = re.compile(r":(?P<user>\w+)!~.+\sJOIN\s")
-        self.regexIsCommand = re.compile(r"(?P<command>!!..+)")
-        self.regexCommandSplitCommand = re.compile(r"!!(?P<command>\w+)\s(?P<arguments>.*).*")
+        self.regexIsJoin = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
+        self.regexIsCommand = re.compile(r"(?P<command>%s..+)" % self.bot_command)
+        self.regexCommandSplitCommand = re.compile(r"%s(?P<command>\w+)\s(?P<arguments>.*).*" % self.bot_command)
         self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
 
     def run(self):
         self.socket.connect((self.network, self.port))
-        self.log(self.socket.recv(self.tempCacheSize))
+        self.log(self.socket.recv(self.tempCacheSize).decode("UTF-8"))
         string = 'NICK %s \r\n' % self.nickname
         self.socket.send(string.encode("UTF-8"))
         string = 'USER %s some stuff :Python IRC\r\n' % self.nickname

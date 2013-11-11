@@ -1,6 +1,8 @@
 from configparser import ConfigParser
+import os
 
-FILE_NAME = "settings.txt"
+current_directory = os.getcwd()
+FILE_NAME = "%s/settings.txt" % current_directory
 
 def create_config():
     config_file = open(FILE_NAME, 'w')
@@ -12,6 +14,7 @@ def create_config():
                     quit = !!quit
                     channel = #reddit-progether
                     password = 1234test
+                    bot_command = !!
                     """
     file_content = file_content.splitlines()
     for line in file_content:
@@ -19,6 +22,7 @@ def create_config():
     config_file.close()
 
 def read_config():
+    print(os.getcwd())
     config = dict()
     config_file = ConfigParser()
     try:
@@ -33,6 +37,7 @@ def read_config():
     config['channel'] = config_file.get('settings', 'channel')
     config['quit'] = config_file.get('settings', 'quit')
     config['password'] = config_file.get('settings', 'password')
+    config['bot_command'] = config_file.get('settings', 'bot_command')
     return config
 
 
