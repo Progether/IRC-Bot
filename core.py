@@ -17,7 +17,7 @@ class IRCBot:
 
         self.addonList = list()
 
-        self.regexIsJoin = re.compile(r":(?P<user>\w+)!~.+\sJOIN\s")
+        self.regexIsJoin = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
         self.regexIsCommand = re.compile(r"(?P<command>!!..+)")
         self.regexCommandSplitCommand = re.compile(r"!!(?P<command>\w+)\s(?P<arguments>.*).*")
         self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
