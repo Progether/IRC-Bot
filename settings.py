@@ -14,6 +14,7 @@ def create_config():
                     quit = !!quit
                     channel = #reddit-progether
                     password = 1234test
+                    bot_command = !!
                     """
     file_content = file_content.splitlines()
     for line in file_content:
@@ -36,6 +37,7 @@ def read_config():
     config['channel'] = config_file.get('settings', 'channel')
     config['quit'] = config_file.get('settings', 'quit')
     config['password'] = config_file.get('settings', 'password')
+    config['bot_command'] = config_file.get('settings', 'bot_command')
     return config
 
 
