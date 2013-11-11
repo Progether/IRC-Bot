@@ -13,7 +13,10 @@ class Speak(AddonBase):
             ircHelpers.sayInChannel("Hello %s! If you're new, try !!help" % user)
 
     def relay(self, arguments, messageInfo):
-        command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], messageInfo['user'] + ' told me to say ' + arguments)
+        if (len(arguments) <= 0):
+          command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], messageInfo['user'] + ' told me to say nothing.')
+        else:
+          command = 'PRIVMSG %s :%s\r\n' % (messageInfo['channel'], messageInfo['user'] + ' told me to say ' + arguments)
         ircHelpers.send(command.encode("UTF-8"))
     
     def speak(self, arguments, messageInfo):
