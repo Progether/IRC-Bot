@@ -17,5 +17,5 @@ class Speak(AddonBase):
         ircHelpers.send(command.encode("UTF-8"))
     
     def speak(self, arguments, messageInfo):
-        ircHelpers.send(arguments.encode("UTF-8"))
+        ircHelpers.sayInChannel(arguments.encode("UTF-8"))
         
