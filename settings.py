@@ -22,7 +22,6 @@ def create_config():
     config_file.close()
 
 def read_config():
-    print(os.getcwd())
     config = dict()
     config_file = ConfigParser()
     try:

@@ -31,6 +31,13 @@ Todo
 
 Changelog
 -----------
+Nov11
+
+ 1. cleaned up code, removed unecessary bits
+ 1. removed quit method (useless with heroku auto-up)
+ 1. fixed ascii bug
+ 1. added postgres support 
+
 Nov10
 
  1. fix for join message
