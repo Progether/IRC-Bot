@@ -49,6 +49,16 @@ class DB:
       conn.close()
     else:
       ircHelpers.sayInChannel("There is no table: %s" % table_name)
+      
+  def db_get_data(self,table_name,condition_column_name,condition_value,column_names='*',condition_type='='):
+    if self.db_check_table(table_name):
+      conn = self.db_connect()
+      cur = conn.cursor()
+      SQL = "SELECT %s FROM %s WHERE %s %s '%s'" % (column_names,table_name,condition_column_name,condition_type,condition_value)
+      cur.execute(SQL)
+      response = cur.fetchall()
+      conn.close()
+      return response
 
   def db_delete_data(self,table_name,condition_column_name,condition_value,condition_type='='):
     if self.db_check_table(table_name):

@@ -8,10 +8,14 @@ class Speak(AddonBase):
           "irc":self.irc,
           "reddit":self.reddit,
           "help":self.help,
+          "mailhelp":self.mailhelp,
           "wiki":self.wiki}
     
     def help(self, arguments, messageInfo):
-      ircHelpers.sayInChannel("Welcome to progether! There may not always be a lot of activity here, just stick around. Someone will pop up. To experiment with the bot, try these commands: !!irc, !!reddit, !!wiki. Some future commands deal with chatlogs and in-channel mail.")
+        ircHelpers.sayInChannel("Welcome to progether! There may not always be a lot of activity here, just stick around. Someone will pop up. To experiment with the bot, try these commands: !!irc, !!reddit, !!wiki, !!mailhelp. Some future commands deal with chatlogs.")
+
+    def mailhelp(self, arguments, messageInfo):
+        ircHelpers.sayInChannel("To view mail: !!mymail. To send mail: !!mail <recipient> <message>. To delete mail: !!delmail <id>. All messages can be done through private messages: /msg progether !!mail")
 
     def irc(self, arguments, messageInfo):
         ircHelpers.sayInChannel("server: irc.freenode.net, channel: #reddit-progether")

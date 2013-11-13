@@ -3,9 +3,28 @@ IRC-Bot
 progether IRC bot
 
 
-Description
+Usage
 -----------
 
+**Mail**
+
+To send a mail message:
+
+   !!mail <user> <message>
+
+To view messages:
+
+   !!mymail
+
+To del message:
+
+   !!delmail <id>
+
+All commands can also be performed as private messages like this:
+
+   /msg progether !!mymail
+
+All interactions are encouraged to be done through private messages.
 
 Helping Out
 -----------
@@ -31,6 +50,12 @@ Todo
 
 Changelog
 -----------
+Nov12
+
+ 1. fixed IsJoin functionality (my mistake)
+ 1. implemented mail method
+ 1. added db_get_data to db.py
+
 Nov11
 
  1. cleaned up code, removed unecessary bits

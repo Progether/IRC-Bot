@@ -1,4 +1,6 @@
 from core import ircBot, AddonBase
+from db import DB
+import os,binascii
 import ircHelpers
 
 import re
@@ -6,27 +8,33 @@ import re
 @ircBot.registerAddon()
 class Mail(AddonBase):
     def __init__(self):
-      self.commandList = {"mail" : self.mail, "mymail" : self.myMail}
-      self.joinList = [self.notify]
-      
-      self.regexMail = re.compile(r"(?P<user>\w+)\s(?P<message>.+)")
-      
-      self.mailDict = dict()
+        self.commandList = {"mail" : self.send_mail, "mymail" : self.get_mail, "delmail" : self.delete_mail }
+        self.joinList = [self.notify]
 
-    def myMail(self, arguments, messageInfo):
-      if messageInfo['user'] in mailDict:
-        for mail in self.mailDict[messageInfo['user']]:
-          ircHelpers.privateMessage(messageInfo['user'], mail)
-          self.mailDict[messageInfo['user']] = list()
+    def send_mail(self, arguments, messageInfo):
+        sender = messageInfo['user']
+        message = arguments.split(" ", 1)
+        recipient = message[0]
+        message = message[1]
+        id = binascii.b2a_hex(os.urandom(3)).decode()
+        dict = { "sender" : sender, "recipient" : recipient, "message" : message.strip("\r"), "id" : id }
+        DB().db_add_data("mail", dict)
+        ircHelpers.privateMessage(messageInfo["user"], "sent message to %s" % recipient)
 
-    def mail(self, arguments, messageInfo):
-        regex = self.regexMail.match(arguments)
-        if regex:
-          if regex.group('user') not in self.mailDict:
-            self.mailDict[regex.group('user')] = list()
-            self.mailDict[regex.group('user')].append(messageInfo['user'] + ': ' + regex.group('message'))
+    def get_mail(self, arguments, messageInfo):
+        recipient = messageInfo["user"]
+        data = DB().db_get_data("mail", "recipient", recipient)
+        if len(data) == 0:
+            ircHelpers.privateMessage(messageInfo["user"], "You have no messages")
+        else:
+            for tuple in data:
+                ircHelpers.privateMessage(tuple[1], "%s says: %s id: %s" % (tuple[0],tuple[2],tuple[3]))
 
+    def delete_mail(self, arguments, messageInfo):
+        DB().db_delete_data("mail","id",arguments.strip('\r'),"=")
+        ircHelpers.privateMessage(messageInfo["user"], "Deleted message (if available)")
+        
     def notify(self, user):
-      if user in self.mailDict:
-        if len(self.mailDict[user]) > 0:
-          ircHelpers.privateMessage(user, 'you have mail, !!mymail to view')
+        data = DB().db_get_data("mail", "recipient", user)
+        if len(data) != 0:
+            ircHelpers.privateMessage(user, "You have mail! You can check it with mymail and delete it with delmail <id>")

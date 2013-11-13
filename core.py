@@ -67,12 +67,12 @@ class IRCBot:
                         for messageMethod in addon.messageList:
                           messageMethod(messageInfo)
                           
-                # if new join, greet
-                isJoin = self.regexIsJoin.match(receivedData)
-                if isJoin:
-                  for addon in self.addonList:
+            # if new join, greet
+            isJoin = self.regexIsJoin.match(receivedData)
+            if isJoin:
+                for addon in self.addonList:
                     for joinMethod in addon.joinList:
-                      joinMethod(isJoin.group('user'))
+                        joinMethod(isJoin.group('user'))
 
             #make sure we don't time out of server
             if receivedData.find('PING') != -1:
