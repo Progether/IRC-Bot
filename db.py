@@ -25,7 +25,7 @@ class DB:
     if self.db_check_table(table_name):
       conn = self.db_connect()
       cur = conn.cursor()
-      SQL = "DROP TABLE IF EXISTS %s" % (table_name)
+      SQL = "DROP TABLE IF EXISTS %s" % table_name
       cur.execute(SQL)
       conn.commit()
       conn.close()
@@ -43,40 +43,40 @@ class DB:
         column_data = column_data + "'" + data[key] + "', "
       table_columns = table_columns[:-2]
       column_data = column_data[:-2]
-      SQL = "INSERT INTO %s (%s) VALUES(%s);" % (table_name, table_columns,column_data)
+      SQL = "INSERT INTO %s (%s) VALUES(%s);" % (table_name,table_columns,column_data)
       cur.execute(SQL)
       conn.commit()
       conn.close()
     else:
       ircHelpers.sayInChannel("There is no table: %s" % table_name)
       
-  def db_get_data(self,table_name,condition_column_name,condition_value,column_names='*',condition_type='='):
+  def db_get_data(self,table_name,condition_column_name,condition_value,):
     if self.db_check_table(table_name):
       conn = self.db_connect()
       cur = conn.cursor()
-      SQL = "SELECT %s FROM %s WHERE %s %s '%s'" % (column_names,table_name,condition_column_name,condition_type,condition_value)
+      SQL = "SELECT * FROM %s WHERE %s = '%s'" % (table_name,condition_column_name,condition_value)
       cur.execute(SQL)
       response = cur.fetchall()
       conn.close()
       return response
 
-  def db_delete_data(self,table_name,condition_column_name,condition_value,condition_type='='):
+  def db_delete_data(self,table_name,condition_column_name,condition_value):
     if self.db_check_table(table_name):
       conn = self.db_connect()
       cur = conn.cursor()
-      SQL = "DELETE FROM %s WHERE %s %s '%s'" % (table_name,condition_column_name,condition_type,condition_value)
+      SQL = "DELETE FROM %s WHERE %s = '%s'" % (table_name,condition_column_name,condition_value)
       cur.execute(SQL)
       conn.commit()
       conn.close()
     else:
       ircHelpers.sayInChannel("There is no table: %s" % table_name)
 
-  def db_update_data(self,table_name,column_name,changed_value,condition_column_name,condition_value,condition_type='='):
+  def db_update_data(self,table_name,column_name,changed_value,condition_column_name,condition_value,):
     if self.db_check_table(table_name):
       conn = self.db_connect()
       cur = conn.cursor()
-      SQL = "UPDATE %s SET %s = '%s' WHERE %s %s '%s'" % (table_name,column_name,changed_value,condition_column_name,condition_type,condition_value)
-      cur.execute(SQL)
+      SQL = "UPDATE "+table_name+" SET "+column_name+" = %s WHERE "+condition_column_name+" = "+condition_value
+      cur.execute(SQL, (changed_value))
       conn.commit()
       conn.close()
     else:
@@ -85,8 +85,9 @@ class DB:
   def db_check_table(self,table_name):
     conn = self.db_connect()
     cur = conn.cursor()
-    SQL = "SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name='%s')" % table_name
-    cur.execute(SQL)
+    SQL = "SELECT EXISTS(SELECT * FROM information_schema.tables WHERE table_name=%s)"
+    data = (table_name, )
+    cur.execute(SQL, data)
     response = cur.fetchone()[0]
     conn.close()
     return response

@@ -26,11 +26,11 @@ class DataBaseTest(AddonBase):
   def delete_data(self, arguments, messageInfo):
     # table_name, name of column to determine deletion, column value, type of condition to match (= or LIKE)
     # makes DELETE FROM test where name = 'test1'
-    DB().db_delete_data("test","name","test1","=")
+    DB().db_delete_data("test","name","test1")
     ircHelpers.sayInChannel("Deleted data")
 
   def update_data(self, arguments, messageInfo):
     # table_name, name of column to change, column value, name of column to determine change, column value, = or LIKE
     # makes UPDATE test SET name = 'test2' WHERE name = 'test1'
-    DB().db_update_data("test","name","test2","name","test1","=")
+    DB().db_update_data("test","name","test2","name","test1")
     ircHelpers.sayInChannel("Updated data")

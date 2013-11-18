@@ -31,7 +31,7 @@ class Mail(AddonBase):
                 ircHelpers.privateMessage(tuple[1], "%s says: %s id: %s" % (tuple[0],tuple[2],tuple[3]))
 
     def delete_mail(self, arguments, messageInfo):
-        DB().db_delete_data("mail","id",arguments.strip('\r'),"=")
+        DB().db_delete_data("mail","id",arguments.strip('\r'))
         ircHelpers.privateMessage(messageInfo["user"], "Deleted message (if available)")
         
     def notify(self, user):
