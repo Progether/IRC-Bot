@@ -12,23 +12,28 @@ class Projects(AddonBase):
 
     def list_projects(self, arguments, messageInfo):
         if not DB().db_check_table("projects"):
-            DB().db_add_table("projects", "name text, language text, description text, id text")
-        data = DB().db_get_all_data("projects")
+            DB().db_add_table("projects", "name text, language text, link text, description text, id text")
+        if (arguments):
+            data = DB().db_get_data("projects", "language", arguments.replace('\r',''))
+        else:
+            data = DB().db_get_all_data("projects")
         if len(data) == 0:
             ircHelpers.privateMessage(messageInfo["user"], "There are no listed projects")
         else:
             for tuple in data:
-                ircHelpers.privateMessage(messageInfo["user"], "[%s] %s - %s. id: %s" % (tuple[1], tuple[0], tuple[2], tuple[3]))
+                ircHelpers.privateMessage(messageInfo["user"], "[%s] %s - %s. link: %s.id: %s" % (tuple[1], tuple[0], tuple[3], tuple[2], tuple[4]))
 
     def add_projects(self, arguments, messageInfo):
         message = arguments.split(" ")
         name = message[0]
         language = message[1]
+        link = message[2]
+        message.pop(0)
         message.pop(0)
         message.pop(0)
         description = ' '.join(message)
         id = binascii.b2a_hex(os.urandom(3)).decode()
-        dict = { "name" : name, "language" : language, "description" : description.strip("\r"), "id" : id }
+        dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : id }
         DB().db_add_data("projects", dict)
         ircHelpers.privateMessage(messageInfo["user"], "added project %s" % name)
 
