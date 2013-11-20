@@ -4,14 +4,14 @@ import ircHelpers
 @ircBot.registerAddon()
 class Speak(AddonBase):
     def __init__(self):
-      self.commandList = {
-          "irc":self.irc,
-          "reddit":self.reddit,
-          "help":self.help,
-          "mailhelp":self.mailhelp,
-          "projecthelp":self.projecthelp,
-          "nick":self.changenick,
-          "wiki":self.wiki}
+        self.commandList = {
+            "irc":self.irc,
+            "reddit":self.reddit,
+            "help":self.help,
+            "mailhelp":self.mailhelp,
+            "projecthelp":self.projecthelp,
+            "nick":self.changenick,
+            "wiki":self.wiki}
     
     def help(self, arguments, messageInfo):
         ircHelpers.sayInChannel("Welcome to progether! There may not always be a lot of activity here, just stick around. Someone will pop up. To experiment with the bot, try these commands: !!irc, !!reddit, !!wiki, !!mailhelp, !!projecthelp. Some future commands deal with chatlogs. All commands can be done as private messages: /msg progether !!<command>.")
@@ -29,7 +29,7 @@ class Speak(AddonBase):
         ircHelpers.sayInChannel("http://reddit.com/r/progether/")
 
     def wiki(self, arguments, messageInfo):
-      ircHelpers.sayInChannel("http://www.reddit.com/r/progether/wiki/index")
+        ircHelpers.sayInChannel("http://www.reddit.com/r/progether/wiki/index")
 
     def changenick(self, arguments, messageInfo):
         ircHelpers.changeNick(arguments)
