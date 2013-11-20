@@ -42,6 +42,7 @@ class IRCBot:
             messageInfo = dict()
             isNickInUse = self.regexIsNickInUse.match(receivedData)
             if isNickInUse:
+                import ircHelpers    # dirty hack - should be moved somewhere more applicable (ie at !!nick)
                 ircHelpers.sayInChannel("Nick is already in use")
             isChat = self.regexIsChat.match(receivedData)
             if isChat:
@@ -59,17 +60,17 @@ class IRCBot:
                     commandArguments = split.group('arguments')
                     isAddon = "False"
                     for addon in self.addonList:
-                      if commandName in addon.commandList:
-                        addon.commandList[commandName](commandArguments, messageInfo)
-                        isAddon = "True"
+                        if commandName in addon.commandList:
+                            addon.commandList[commandName](commandArguments, messageInfo)
+                            isAddon = "True"
                     if isAddon == "False":
-                      string = "PRIVMSG %s :I don't know that command\r\n" % (self.channel)
-                      self.socket.send(string.encode('UTF-8'))
+                        string = "PRIVMSG %s :I don't know that command\r\n" % (self.channel)
+                        self.socket.send(string.encode('UTF-8'))
                 # else use chatlog to log message
                 elif messageInfo['channel'] == self.channel:
                     for addon in self.addonList:
                         for messageMethod in addon.messageList:
-                          messageMethod(messageInfo)
+                            messageMethod(messageInfo)
                           
             # if new join, greet
             isJoin = self.regexIsJoin.match(receivedData)
