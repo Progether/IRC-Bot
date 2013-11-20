@@ -2,3 +2,4 @@
 *.project
 *.pydevproject
 venv
+/settings.txt
