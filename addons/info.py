@@ -9,6 +9,7 @@ class Speak(AddonBase):
           "reddit":self.reddit,
           "help":self.help,
           "mailhelp":self.mailhelp,
+          "projecthelp":self.projecthelp,
           "wiki":self.wiki}
     
     def help(self, arguments, messageInfo):
