@@ -25,3 +25,7 @@ def privateMessage(user, message):
 
 def callForUsers():
     send('NAMES %s\r\n' % getChannel())
+
+def changeNick(newNick):
+    string = 'NICK %s' % newNick
+    send(string.encode("UTF-8"))

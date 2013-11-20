@@ -10,6 +10,7 @@ class Speak(AddonBase):
           "help":self.help,
           "mailhelp":self.mailhelp,
           "projecthelp":self.projecthelp,
+          "nick":self.changenick,
           "wiki":self.wiki}
     
     def help(self, arguments, messageInfo):
@@ -29,3 +30,6 @@ class Speak(AddonBase):
 
     def wiki(self, arguments, messageInfo):
       ircHelpers.sayInChannel("http://www.reddit.com/r/progether/wiki/index")
+
+    def changenick(self, arguments, messageInfo):
+        ircHelpers.changeNick(arguments)

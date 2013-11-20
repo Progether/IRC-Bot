@@ -20,6 +20,7 @@ class IRCBot:
 
         self.regexIsJoin = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
         self.regexIsCommand = re.compile(r"(?P<command>%s..+)" % self.bot_command)
+        self.regexIsNickInUse = re.compile(".*433.*")
         self.regexCommandSplitCommand = re.compile(r"%s(?P<command>\w+)\s(?P<arguments>.*).*" % self.bot_command)
         self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
 
@@ -39,6 +40,9 @@ class IRCBot:
         while True:
             receivedData = self.socket.recv(self.tempCacheSize).decode("UTF-8")
             messageInfo = dict()
+            isNickInUse = self.regexIsNickInUse.match(receivedData)
+            if isNickInUse:
+                ircHelpers.sayInChannel("Nick is already in use")
             isChat = self.regexIsChat.match(receivedData)
             if isChat:
                 # parse message
