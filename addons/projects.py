@@ -20,8 +20,8 @@ class Projects(AddonBase):
         if len(data) == 0:
             ircHelpers.privateMessage(messageInfo["user"], "There are no listed projects")
         else:
-            for tuple in data:
-                ircHelpers.privateMessage(messageInfo["user"], "[%s] %s - %s. link: %s.id: %s" % (tuple[1], tuple[0], tuple[3], tuple[2], tuple[4]))
+            for proj_tuple in data:
+                ircHelpers.privateMessage(messageInfo["user"], "[%s] %s - %s. link: %s.id: %s" % (proj_tuple[1], proj_tuple[0], proj_tuple[3], proj_tuple[2], proj_tuple[4]))
 
     def add_projects(self, arguments, messageInfo):
         message = arguments.split(" ")
@@ -32,9 +32,9 @@ class Projects(AddonBase):
         message.pop(0)
         message.pop(0)
         description = ' '.join(message)
-        id = binascii.b2a_hex(os.urandom(3)).decode()
-        dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : id }
-        DB().db_add_data("projects", dict)
+        proj_id = binascii.b2a_hex(os.urandom(3)).decode()
+        proj_dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : proj_id }
+        DB().db_add_data("projects", proj_dict)
         ircHelpers.privateMessage(messageInfo["user"], "added project %s" % name)
 
     def delete_projects(self, arguments, messageInfo):

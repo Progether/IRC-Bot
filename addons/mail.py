@@ -16,9 +16,9 @@ class Mail(AddonBase):
         message = arguments.split(" ", 1)
         recipient = message[0]
         message = message[1]
-        id = binascii.b2a_hex(os.urandom(3)).decode()
-        dict = { "sender" : sender, "recipient" : recipient, "message" : message.strip("\r"), "id" : id }
-        DB().db_add_data("mail", dict)
+        mail_id = binascii.b2a_hex(os.urandom(3)).decode()
+        mail_dict = { "sender" : sender, "recipient" : recipient, "message" : message.strip("\r"), "id" : mail_id }
+        DB().db_add_data("mail", mail_dict)
         ircHelpers.privateMessage(messageInfo["user"], "sent message to %s" % recipient)
 
     def get_mail(self, arguments, messageInfo):
@@ -27,8 +27,8 @@ class Mail(AddonBase):
         if len(data) == 0:
             ircHelpers.privateMessage(messageInfo["user"], "You have no messages")
         else:
-            for tuple in data:
-                ircHelpers.privateMessage(tuple[1], "%s says: %s id: %s" % (tuple[0],tuple[2],tuple[3]))
+            for mail_tuple in data:
+                ircHelpers.privateMessage(mail_tuple[1], "%s says: %s id: %s" % (mail_tuple[0],mail_tuple[2],mail_tuple[3]))
 
     def delete_mail(self, arguments, messageInfo):
         DB().db_delete_data("mail","id",arguments.strip('\r'))
