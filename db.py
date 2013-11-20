@@ -60,6 +60,16 @@ class DB:
       conn.close()
       return response
 
+  def db_get_all_data(self,table_name):
+    if self.db_check_table(table_name):
+      conn = self.db_connect()
+      cur = conn.cursor()
+      SQL = "SELECT * FROM %s" % (table_name)
+      cur.execute(SQL)
+      response = cur.fetchall()
+      conn.close()
+      return response
+
   def db_delete_data(self,table_name,condition_column_name,condition_value):
     if self.db_check_table(table_name):
       conn = self.db_connect()
