@@ -37,8 +37,8 @@ class Projects(AddonBase):
                     max_desc = len(proj_tuple[3])
                 if len(proj_tuple[2]) > max_link:
                     max_link = len(proj_tuple[2])
-            title_row = "(%s)  %s || %s  |  %s  || %s" %(
-                                     "  (id)  ",
+            title_row = "(%s)  %s [[ %s ]]  %s  (( %s ))" %(
+                                     "  id  ",
                                      "language".ljust(max_lang),
                                      "name".ljust(max_name),
                                      "description".ljust(max_desc),
@@ -49,8 +49,8 @@ class Projects(AddonBase):
             
             for proj_tuple in data:
                 ircHelpers.pmInChannel(user,
-                                       #(id) [lang] - name  |  desc  << link >>
-                                       "(%s)  %s >> %s  |  %s  << %s"
+                                       #(id) lang [[ name ]]  desc  << link >>
+                                       "(%s)  %s [[ %s ]]  %s  (( %s ))"
                                        % (proj_tuple[4],                  # id
                                           proj_tuple[1].ljust(max_lang),  # lang
                                           proj_tuple[0].ljust(max_name),  # name
