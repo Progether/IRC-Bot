@@ -98,7 +98,7 @@ class IRCBot:
 
     def log(self, stringToLog):
         #change eventually to log in a file but for now print is fine
-        print(stringToLog)
+        print("<< %s" % stringToLog)
 
     def registerAddon(self, **options):
         def decorator(f):

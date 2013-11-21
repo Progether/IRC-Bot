@@ -13,6 +13,7 @@ def getNick():
     return ircBot.nickname
 
 def send(thingToSend):
+    print(">> %s" % thingToSend)
     ircBot.socket.send(thingToSend)
 
 def sayInChannel(thingToSay):
@@ -24,7 +25,7 @@ def privateMessage(user, message):
     send(string.encode("UTF-8"))
     
 def pmInChannel(user, message):
-    string = 'NOTIFY %s :%s\r\n' % (user, message)
+    string = 'NOTICE %s :%s\r\n' % (user, message)
     send(string.encode("UTF-8"))
 
 def callForUsers():
