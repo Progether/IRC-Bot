@@ -19,12 +19,12 @@ class Projects(AddonBase):
         else:
             data = DB().db_get_all_data("projects")
         if data == None:
-            ircHelpers.privateMessage(messageInfo["user"], "Error while trying to retrieve Projects")
+            ircHelpers.pmInChannel(messageInfo["user"], "Error while trying to retrieve Projects")
         if len(data) == 0:
-            ircHelpers.privateMessage(messageInfo["user"], "There are no listed projects")
+            ircHelpers.pmInChannel(messageInfo["user"], "There are no listed projects")
         else:
             for proj_tuple in data:
-                ircHelpers.privateMessage(messageInfo["user"], "[%s] %s - %s. link: %s.id: %s" % (proj_tuple[1], proj_tuple[0], proj_tuple[3], proj_tuple[2], proj_tuple[4]))
+                ircHelpers.pmInChannel(messageInfo["user"], "[%s] %s - %s. link: %s.id: %s" % (proj_tuple[1], proj_tuple[0], proj_tuple[3], proj_tuple[2], proj_tuple[4]))
 
     def add_projects(self, arguments, messageInfo):
         message = arguments.split(" ")
@@ -38,12 +38,12 @@ class Projects(AddonBase):
         proj_id = binascii.b2a_hex(os.urandom(3)).decode()
         proj_dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : proj_id }
         if DB().db_add_data("projects", proj_dict):
-            ircHelpers.privateMessage(messageInfo["user"], "added project %s" % name)
+            ircHelpers.sayInChannel("added project %s" % name)
         else:
-            ircHelpers.privateMessage(messageInfo["user"], "Error trying to add project %s" % name)
+            ircHelpers.pmInChannel("Error trying to add project %s" % name)
 
     def delete_projects(self, arguments, messageInfo):
         if DB().db_delete_data("projects", "id", arguments.strip('\r')):
-            ircHelpers.privateMessage(messageInfo["user"], "Deleted project (if available)")
+            ircHelpers.sayInChannel("Deleted project (if available)")
         else:
-            ircHelpers.privateMessage(messageInfo["user"], "Error trying to delete project")
+            ircHelpers.sayInChannel("Error trying to delete project")
