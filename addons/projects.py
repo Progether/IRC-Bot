@@ -12,6 +12,7 @@ class Projects(AddonBase):
         self.commandList = { "projects" : self.list_projects, "addproject" : self.add_projects, "delproject" : self.delete_projects }
 
     def list_projects(self, arguments, messageInfo):
+        user = messageInfo['user']
         if not DB().db_check_table("projects"):
             DB().db_add_table("projects", "name text, language text, link text, description text, id text")
         if (arguments):
@@ -19,13 +20,14 @@ class Projects(AddonBase):
         else:
             data = DB().db_get_all_data("projects")
         if data == None:
-            ircHelpers.pmInChannel(messageInfo["user"], "Error while trying to retrieve Projects")
+            ircHelpers.pmInChannel(user, "Error while trying to retrieve Projects")
         if len(data) == 0:
-            ircHelpers.pmInChannel(messageInfo["user"], "There are no listed projects")
+            ircHelpers.pmInChannel(user, "There are no listed projects")
         else:
-            max_name = 0
-            max_lang = 0
-            max_desc = 0
+            max_name = len("name")
+            max_lang = len("language")
+            max_desc = len("description")
+            max_link = 0
             for proj_tuple in data:
                 if len(proj_tuple[1]) > max_lang:
                     max_lang = len(proj_tuple[1])
@@ -33,10 +35,22 @@ class Projects(AddonBase):
                     max_name = len(proj_tuple[0])
                 if len(proj_tuple[3]) > max_desc:
                     max_desc = len(proj_tuple[3])
+                if len(proj_tuple[2]) > max_link:
+                    max_link = len(proj_tuple[2])
+            title_row = "(%s)  %s || %s  |  %s  || %s" %(
+                                     "  (id)  ",
+                                     "language".ljust(max_lang),
+                                     "name".ljust(max_name),
+                                     "description".ljust(max_desc),
+                                     "link".ljust(max_link))
+            
+            ircHelpers.pmInChannel(user, title_row)
+            ircHelpers.pmInChannel(user, '-'*len(title_row))
+            
             for proj_tuple in data:
-                ircHelpers.pmInChannel(messageInfo["user"],
+                ircHelpers.pmInChannel(user,
                                        #(id) [lang] - name  |  desc  << link >>
-                                       "(%s) [%s] - %s  |  %s  << %s >>"
+                                       "(%s)  %s >> %s  |  %s  << %s"
                                        % (proj_tuple[4],                  # id
                                           proj_tuple[1].ljust(max_lang),  # lang
                                           proj_tuple[0].ljust(max_name),  # name
