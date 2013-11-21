@@ -24,7 +24,7 @@ def privateMessage(user, message):
     send(string.encode("UTF-8"))
     
 def pmInChannel(user, message):
-    string = 'MSG %s :%s\r\n' % (user, message)
+    string = 'NOTIFY %s :%s\r\n' % (user, message)
     send(string.encode("UTF-8"))
 
 def callForUsers():
