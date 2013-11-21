@@ -19,6 +19,7 @@ class DB:
                 'logs'     : (1,
                     "_id integer PRIMARY KEY DEFAULT nextval('serial'), time type text NOT NULL, log text NOT NULL")
                 }
+        self.unmanaged_tables = ('logs', 'users', 'tables')
         self.__ensure_all_tables_correct()
 
 #future ideas:  
@@ -226,10 +227,9 @@ class DB:
 
     def __ensure_all_tables_correct(self):
         all_tables = self.tables.keys()
-        unimplemented_tables = ('logs', 'users', 'tables')
         all_successful = True
         for table in all_tables:
-            if table in unimplemented_tables:
+            if table in self.unmanaged_tables:
                 continue
             if self.__ensure_table_correct(table):
                 print(".. Table found: %s" % table)
