@@ -46,8 +46,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
         
     def db_drop_table(self,table_name):
         try:
@@ -68,8 +68,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
 
     def db_add_data(self,table_name,data):
         try:
@@ -97,8 +97,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
             
     def db_get_data(self,table_name,condition_column_name,condition_value,):
         try:
@@ -118,8 +118,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
 
     def db_get_all_data(self,table_name):
         try:
@@ -139,8 +139,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
 
     def db_delete_data(self,table_name,condition_column_name,condition_value):
         try:
@@ -161,8 +161,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
 
     def db_update_data(self,table_name,column_name,changed_value,condition_column_name,condition_value,):
         try:
@@ -183,8 +183,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
 
     def db_check_table(self,table_name):
         try:
@@ -204,8 +204,8 @@ class DB:
         finally:
             try:
                 conn.close()
-            except Exception as e:
-                print(e)
+            except Exception:
+                pass
 
     def ensure_all_tables_exist(self):
         pass

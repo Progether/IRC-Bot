@@ -43,7 +43,7 @@ class Mail(AddonBase):
         
     def notify(self, user):
         data = DB().db_get_data("mail", "recipient", user)
-        if data != None:
+        if data == None:
             print("!! Error attempting to notify user of mail.")
         elif len(data) != 0:
             ircHelpers.pmInChannel(user, "You have mail! You can check it with mymail and delete it with delmail <id>")
