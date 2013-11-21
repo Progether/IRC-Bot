@@ -15,35 +15,48 @@ class Mail(AddonBase):
     def send_mail(self, arguments, messageInfo):
         sender = messageInfo['user']
         message = arguments.split(" ", 1)
-        recipient = message[0]
-        message = message[1]
+        try:
+            recipient = message[0]
+            message = message[1]
+        except IndexError:
+            ircHelpers.pmInChannel(sender, "Correct usage is: !!mail [recipient] [message]")
+            return False
         mail_id = binascii.b2a_hex(os.urandom(3)).decode()
         mail_dict = { "sender" : sender, "recipient" : recipient, "message" : message.strip("\r"), "id" : mail_id }
         if DB().db_add_data("mail", mail_dict):
-            ircHelpers.pmInChannel(messageInfo["user"], "sent message to %s" % recipient)
+            ircHelpers.pmInChannel(sender, "sent message to %s" % recipient)
+            return True
         else:
-            ircHelpers.pmInChannel(messageInfo["user"], "Failed to send message to %s" % recipient)
+            ircHelpers.pmInChannel(sender, "Failed to send message to %s" % recipient)
+            return False
 
     def get_mail(self, arguments, messageInfo):
         recipient = messageInfo["user"]
         data = DB().db_get_data("mail", "recipient", recipient)
         if data == None:
             ircHelpers.pmInChannel(messageInfo["user"], "Error retrieving mail")
+            return False
         elif len(data) == 0:
             ircHelpers.pmInChannel(messageInfo["user"], "You have no messages")
+            return True
         else:
             for mail_tuple in data:
                 ircHelpers.privateMessage(mail_tuple[1], "%s says: %s id: %s" % (mail_tuple[0],mail_tuple[2],mail_tuple[3]))
+            return True
 
     def delete_mail(self, arguments, messageInfo):
         if DB().db_delete_data("mail","id",arguments.strip('\r')):
             ircHelpers.pmInChannel(messageInfo["user"], "Deleted message (if available)")
+            return True
         else:
             ircHelpers.pmInChannel(messageInfo["user"], "Error while deleting message")
+            return False
         
     def notify(self, user):
         data = DB().db_get_data("mail", "recipient", user)
         if data == None:
             print("!! Error attempting to notify user of mail.")
+            return False
         elif len(data) != 0:
             ircHelpers.pmInChannel(user, "You have mail! You can check it with mymail and delete it with delmail <id>")
+            return True

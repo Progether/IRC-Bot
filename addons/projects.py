@@ -28,13 +28,18 @@ class Projects(AddonBase):
 
     def add_projects(self, arguments, messageInfo):
         message = arguments.split(" ")
-        name = message[0]
-        language = message[1]
-        link = message[2]
-        message.pop(0)
-        message.pop(0)
-        message.pop(0)
-        description = ' '.join(message)
+        try:
+            name = message[0]
+            language = message[1]
+            link = message[2]
+            message.pop(0)
+            message.pop(0)
+            message.pop(0)
+            description = ' '.join(message)
+        except IndexError:
+            ircHelpers.pmInChannel(messageInfo['user'], "Correct usage is: !!addproject [name] [language] [link] [description]")
+            return False
+        
         proj_id = binascii.b2a_hex(os.urandom(3)).decode()
         proj_dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : proj_id }
         if DB().db_add_data("projects", proj_dict):
@@ -43,7 +48,12 @@ class Projects(AddonBase):
             ircHelpers.pmInChannel("Error trying to add project %s" % name)
 
     def delete_projects(self, arguments, messageInfo):
+        if not arguments.strip('\r').strip():
+            ircHelpers.pmInChannel(messageInfo['user'], "Correct usage is: !!delproject [project_id]")
+            return False
         if DB().db_delete_data("projects", "id", arguments.strip('\r')):
             ircHelpers.sayInChannel("Deleted project (if available)")
+            return True
         else:
             ircHelpers.sayInChannel("Error trying to delete project")
+            return False
