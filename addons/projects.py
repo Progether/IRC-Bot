@@ -23,8 +23,25 @@ class Projects(AddonBase):
         if len(data) == 0:
             ircHelpers.pmInChannel(messageInfo["user"], "There are no listed projects")
         else:
+            max_name = 0
+            max_lang = 0
+            max_desc = 0
             for proj_tuple in data:
-                ircHelpers.pmInChannel(messageInfo["user"], "[%s] %s - %s. link: %s.id: %s" % (proj_tuple[1], proj_tuple[0], proj_tuple[3], proj_tuple[2], proj_tuple[4]))
+                if len(proj_tuple[1]) > max_lang:
+                    max_lang = len(proj_tuple[1])
+                if len(proj_tuple[0]) > max_name:
+                    max_name = len(proj_tuple[0])
+                if len(proj_tuple[3]) > max_desc:
+                    max_desc = len(proj_tuple[3])
+            for proj_tuple in data:
+                ircHelpers.pmInChannel(messageInfo["user"],
+                                       #(id) [lang] - name  |  desc  << link >>
+                                       "(%s) [%s] - %s  |  %s  << %s >>"
+                                       % (proj_tuple[4],                  # id
+                                          proj_tuple[1].ljust(max_lang),  # lang
+                                          proj_tuple[0].ljust(max_name),  # name
+                                          proj_tuple[3].ljust(max_desc),  # desc
+                                          proj_tuple[2]))                 # link
 
     def add_projects(self, arguments, messageInfo):
         message = arguments.split(" ")
