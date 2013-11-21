@@ -1,15 +1,16 @@
 import psycopg2
 import ircHelpers
-import urllib.parse
-import os
+import settings
 
 class DB:
     def db_connect(self):
-        urllib.parse.uses_netloc.append("postgres")
-        if "DATABASE_URL" not in os.environ:
-            os.environ["DATABASE_URL"] = 'postgres://ddvzstnjeyvtkk:qiJbYxnbFTlXBAtRiyRkXGkFub@ec2-23-23-80-55.compute-1.amazonaws.com:5432/d2k2tmq3q2lk62'
-        url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
-        conn = psycopg2.connect(database=url.path[1:], user=url.username, password=url.password, host=url.hostname, port=url.port)
+        config = settings.read_config()
+        conn = psycopg2.connect(
+                                database = config['db_name'],
+                                user     = config['db_user'],
+                                password = config['db_pass'],
+                                host     = config['db_host'],
+                                port     = config['db_port'])
         return conn
     
     def db_add_table(self,table_name,table_info):
@@ -102,3 +103,6 @@ class DB:
         conn.close()
         return response
 
+if __name__ == "__main__":
+    print("Creating databases...")
+    ##TODO
