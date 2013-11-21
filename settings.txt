@@ -1,8 +1,0 @@
-[settings]
-nick = progether
-port = 6667
-network = irc.freenode.net
-quit = !!quit
-channel = #reddit-progether
-password = progether_bot
-bot_command = !!
