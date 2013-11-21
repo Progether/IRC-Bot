@@ -10,7 +10,7 @@ class Speak(AddonBase):
 
     def sayHello(self, user):
         if user != ircHelpers.getNick():
-            ircHelpers.sayInChannel("Hello %s! If you're new, try !!help" % user)
+            ircHelpers.pmInChannel(user, "Hello %s! If you're new, try !!help" % user)
 
     def relay(self, arguments, messageInfo):
         if (len(arguments) <= 0):
