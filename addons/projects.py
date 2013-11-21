@@ -42,7 +42,7 @@ class Projects(AddonBase):
                                      "language".ljust(max_lang),
                                      "name".ljust(max_name),
                                      "description".ljust(max_desc),
-                                     "link".ljust(max_link))
+                                     "   link".ljust(max_link))
             
             ircHelpers.pmInChannel(user, title_row)
             ircHelpers.pmInChannel(user, '-'*len(title_row))
@@ -55,7 +55,7 @@ class Projects(AddonBase):
                                           proj_tuple[1].ljust(max_lang),  # lang
                                           proj_tuple[0].ljust(max_name),  # name
                                           proj_tuple[3].ljust(max_desc),  # desc
-                                          proj_tuple[2]))                 # link
+                                          proj_tuple[2].ljust(max_link))) # link
 
     def add_projects(self, arguments, messageInfo):
         message = arguments.split(" ")
