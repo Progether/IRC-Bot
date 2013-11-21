@@ -5,24 +5,25 @@ from settings import read_config
 class IRCBot:
     def __init__(self, tempCacheSize=4096):
         conf = read_config()
-        self.network = conf['network']
-        self.port = int(conf['port'])
-        self.channel = conf['channel']
-        self.quitCmd = conf['quit']
-        self.nickname = conf['nick']
-        self.password = conf['password']
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.nickname    = conf['nick']
+        self.password    = conf['password']
+        self.channel     = conf['channel']
+        self.network     = conf['network']
+        self.port        = int(conf['port'])
+        self.quitCmd     = conf['quit']
         self.bot_command = conf['bot_command']
         
+        self.socket        = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.tempCacheSize = tempCacheSize
 
         self.addonList = list()
 
-        self.regexIsJoin = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
-        self.regexIsCommand = re.compile(r"(?P<command>%s..+)" % self.bot_command)
-        self.regexIsNickInUse = re.compile(".*433.*")
+        self.regexIsError             = re.compile(r"^ERROR*")
+        self.regexIsJoin              = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
+        self.regexIsCommand           = re.compile(r"(?P<command>%s..+)" % self.bot_command)
+        self.regexIsNickInUse         = re.compile(".*433.*")
         self.regexCommandSplitCommand = re.compile(r"%s(?P<command>\w+)\s(?P<arguments>.*).*" % self.bot_command)
-        self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
+        self.regexIsChat              = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
 
     def run(self):
         self.socket.connect((self.network, self.port))
@@ -40,15 +41,23 @@ class IRCBot:
         while True:
             receivedData = self.socket.recv(self.tempCacheSize).decode("UTF-8")
             messageInfo = dict()
+            
+            isError     = self.regexIsError.match(receivedData)
+            if isError:
+                self.log("!! CAUGHT ERROR ::> " +receivedData)
+                self.log("Quitting")
+                return 1
+            
             isNickInUse = self.regexIsNickInUse.match(receivedData)
             if isNickInUse:
                 import ircHelpers    # dirty hack - should be moved somewhere more applicable (ie at !!nick)
                 ircHelpers.sayInChannel("Nick is already in use")
+            
             isChat = self.regexIsChat.match(receivedData)
             if isChat:
                 # parse message
-                messageInfo['user'] = isChat.group('user')
-                messageInfo['isp'] = isChat.group('isp')
+                messageInfo['user']    = isChat.group('user')
+                messageInfo['isp']     = isChat.group('isp')
                 messageInfo['channel'] = isChat.group('channel')
                 messageInfo['message'] = isChat.group('message')
 
