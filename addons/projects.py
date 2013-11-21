@@ -8,6 +8,7 @@ import re
 @ircBot.registerAddon()
 class Projects(AddonBase):
     def __init__(self):
+        ##TODO verify table exists
         self.commandList = { "projects" : self.list_projects, "addproject" : self.add_projects, "delproject" : self.delete_projects }
 
     def list_projects(self, arguments, messageInfo):
@@ -17,6 +18,8 @@ class Projects(AddonBase):
             data = DB().db_get_data("projects", "language", arguments.replace('\r',''))
         else:
             data = DB().db_get_all_data("projects")
+        if data == None:
+            ircHelpers.privateMessage(messageInfo["user"], "Error while trying to retrieve Projects")
         if len(data) == 0:
             ircHelpers.privateMessage(messageInfo["user"], "There are no listed projects")
         else:
@@ -34,9 +37,13 @@ class Projects(AddonBase):
         description = ' '.join(message)
         proj_id = binascii.b2a_hex(os.urandom(3)).decode()
         proj_dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : proj_id }
-        DB().db_add_data("projects", proj_dict)
-        ircHelpers.privateMessage(messageInfo["user"], "added project %s" % name)
+        if DB().db_add_data("projects", proj_dict):
+            ircHelpers.privateMessage(messageInfo["user"], "added project %s" % name)
+        else:
+            ircHelpers.privateMessage(messageInfo["user"], "Error trying to add project %s" % name)
 
     def delete_projects(self, arguments, messageInfo):
-        DB().db_delete_data("projects", "id", arguments.strip('\r'))
-        ircHelpers.privateMessage(messageInfo["user"], "Deleted project (if available)")
+        if DB().db_delete_data("projects", "id", arguments.strip('\r')):
+            ircHelpers.privateMessage(messageInfo["user"], "Deleted project (if available)")
+        else:
+            ircHelpers.privateMessage(messageInfo["user"], "Error trying to delete project")

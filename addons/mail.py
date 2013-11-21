@@ -8,6 +8,7 @@ import re
 @ircBot.registerAddon()
 class Mail(AddonBase):
     def __init__(self):
+        ##TODO verify table exists
         self.commandList = {"mail" : self.send_mail, "mymail" : self.get_mail, "delmail" : self.delete_mail }
         self.joinList = [self.notify]
 
@@ -18,23 +19,31 @@ class Mail(AddonBase):
         message = message[1]
         mail_id = binascii.b2a_hex(os.urandom(3)).decode()
         mail_dict = { "sender" : sender, "recipient" : recipient, "message" : message.strip("\r"), "id" : mail_id }
-        DB().db_add_data("mail", mail_dict)
-        ircHelpers.privateMessage(messageInfo["user"], "sent message to %s" % recipient)
+        if DB().db_add_data("mail", mail_dict):
+            ircHelpers.privateMessage(messageInfo["user"], "sent message to %s" % recipient)
+        else:
+            ircHelpers.privateMessage(messageInfo["user"], "Failed to send message to %s" % recipient)
 
     def get_mail(self, arguments, messageInfo):
         recipient = messageInfo["user"]
         data = DB().db_get_data("mail", "recipient", recipient)
-        if len(data) == 0:
+        if data == None:
+            ircHelpers.privateMessage(messageInfo["user"], "Error retrieving mail")
+        elif len(data) == 0:
             ircHelpers.privateMessage(messageInfo["user"], "You have no messages")
         else:
             for mail_tuple in data:
                 ircHelpers.privateMessage(mail_tuple[1], "%s says: %s id: %s" % (mail_tuple[0],mail_tuple[2],mail_tuple[3]))
 
     def delete_mail(self, arguments, messageInfo):
-        DB().db_delete_data("mail","id",arguments.strip('\r'))
-        ircHelpers.privateMessage(messageInfo["user"], "Deleted message (if available)")
+        if DB().db_delete_data("mail","id",arguments.strip('\r')):
+            ircHelpers.privateMessage(messageInfo["user"], "Deleted message (if available)")
+        else:
+            ircHelpers.privateMessage(messageInfo["user"], "Error while deleting message")
         
     def notify(self, user):
         data = DB().db_get_data("mail", "recipient", user)
-        if len(data) != 0:
+        if data != None:
+            print("!! Error attempting to notify user of mail.")
+        elif len(data) != 0:
             ircHelpers.privateMessage(user, "You have mail! You can check it with mymail and delete it with delmail <id>")
