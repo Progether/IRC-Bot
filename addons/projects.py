@@ -44,11 +44,11 @@ class Projects(AddonBase):
                                      "description".ljust(max_desc),
                                      "   link".ljust(max_link))
             
-            ircHelpers.pmInChannel(user, title_row)
-            ircHelpers.pmInChannel(user, '-'*len(title_row))
+            ircHelpers.sayInChannel(title_row)
+            ircHelpers.sayInChannel('-'*len(title_row))
             
             for proj_tuple in data:
-                ircHelpers.pmInChannel(user,
+                ircHelpers.sayInChannel(
                                        #(id) lang [[ name ]]  desc  << link >>
                                        "(%s)  %s [[ %s ]]  %s  (( %s ))"
                                        % (proj_tuple[4],                  # id
