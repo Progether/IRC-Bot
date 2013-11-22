@@ -262,13 +262,13 @@ class Helper(AddonBase):
     
     '''DONE, CORRECT'''
     def __makeCommandNoneMessage(self, command, useShortFormat=True, isChildComment=True):
-        msg = "{1}{2} :: {3}"
+        msg = "{0}{1} :: {2}"
         if isChildComment:
             msg = Helper.INDENT.__add__(msg)
         if useShortFormat:
-            return (msg.format(Helper.PREFIX, command, Helper.NONE_CMD_SHORT),)
+            return (msg.format(Helper.PREFIX, command, Helper.NONE_CMD_SHORT[0]),)
         else:
-            return (msg.format(Helper.PREFIX, command, Helper.NONE_CMD_LONG),)
+            return (msg.format(Helper.PREFIX, command, Helper.NONE_CMD_LONG[0]),)
     
     '''DONE, CORRECT, UNUSED'''
     def __makeInvokeCommand(self, command, useShortFormat=True, **args):
