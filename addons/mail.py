@@ -7,9 +7,21 @@ import re
 
 @ircBot.registerAddon()
 class Mail(AddonBase):
+    prefix = ircBot.command_prefix
+    
+    # All command groups should have a 'help_description' (long and short) that explains the addon package. Help will take care of listing the commands.
+    help_description_short = ("An IRC postal service")
+    help_description_long  = ("Leave messages for other users if they are offline. Messages will be delivered when they are next online.",)
+    # Each command should have a help message to desc its usage. Register and assign help to command in 'self.helplist{}'
+    help_check  = ("%smymail :: Check your mailbox. Use to get ID for deleting mail too" % prefix,)
+    help_send   = ("%smail [user] [message] :: Send a message to the specified user" % prefix,)
+    help_delete = ("%sdelmail [id] :: Delete an old message with ID. Use %smymail to see IDs" % (prefix, prefix),)
+    
     def __init__(self):
         ##TODO verify table exists
-        self.commandList = {"mail" : self.send_mail, "mymail" : self.get_mail, "delmail" : self.delete_mail }
+        self.title = "mailbox"
+        self.commandList = {"mail" : self.send_mail, "mymail" : self.get_mail,   "delmail" : self.delete_mail }
+        self.helpList    = {'mail' : Mail.help_send, 'mymail' : Mail.help_check, "delmail" : Mail.help_delete }
         self.joinList = [self.notify]
 
     def send_mail(self, arguments, messageInfo):
@@ -19,7 +31,7 @@ class Mail(AddonBase):
             recipient = message[0]
             message = message[1]
         except IndexError:
-            ircHelpers.pmInChannel(sender, "Correct usage is: !!mail [recipient] [message]")
+            ircHelpers.pmInChannel(sender, Mail.help_send)
             return False
         mail_id = binascii.b2a_hex(os.urandom(3)).decode()
         mail_dict = { "sender" : sender, "recipient" : recipient, "message" : message.strip("\r"), "id" : mail_id }

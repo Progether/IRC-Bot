@@ -7,6 +7,7 @@ import re
 
 @ircBot.registerAddon()
 class Projects(AddonBase):
+    
     def __init__(self):
         ##TODO verify table exists
         self.commandList = { "projects" : self.list_projects, "addproject" : self.add_projects, "delproject" : self.delete_projects }
