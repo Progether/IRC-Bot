@@ -5,6 +5,7 @@ import ircHelpers
 class Speak(AddonBase):
     
     def __init__(self):
+        self.title = 'info'
         self.commandList = {
             "irc":self.irc,
             "reddit":self.reddit,
