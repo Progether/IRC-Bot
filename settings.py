@@ -12,7 +12,7 @@ file_raw = """  [settings]
                 password = progether_bot
                 
                 ## channel:
-                channel  = #reddit-progether
+                channel  = reddit-progether
                 network  = irc.freenode.net
                 port     = 6667
                 

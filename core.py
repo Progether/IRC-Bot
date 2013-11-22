@@ -12,7 +12,7 @@ class IRCBot:
         conf = read_config()
         self.nickname    = conf['nick']
         self.password    = conf['password']
-        self.channel     = conf['channel']
+        self.channel     = '#%s' % conf['channel']
         self.network     = conf['network']
         self.port        = int(conf['port'])
         
@@ -35,7 +35,10 @@ class IRCBot:
         self.regexIsCommand           = re.compile(r"^%s{1}(?P<command>\w+)" % self.command_prefix)
         self.regexCommandSplitCommand = re.compile(r"^%s{1}(?P<command>\w+)\s(?P<arguments>.*).*" % self.command_prefix)
         self.regexIsChat              = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
-        self.regexIsNickInUse         = re.compile(".*433.*")
+        self.regexIsNickInUse         = re.compile(r".*\s433\s.?%s.*" % self.nickname)
+        self.regexIsAskForLogin       = re.compile(r".*ʌ")
+        # '...freenode.net 461 indibot JOIN :Not enough parameters\r\n'
+        
 
     def run(self):
         self.socket.connect((self.network, self.port))
@@ -55,7 +58,7 @@ class IRCBot:
             messageInfo = dict()
             
             if (self.logAllToConsole):
-                self.log(receivedData.encode('utf-8'))
+                print("-- %s" % receivedData.encode('utf-8'))
             
             isError     = self.regexIsError.match(receivedData)
             if isError:
@@ -120,7 +123,7 @@ class IRCBot:
 
     def log(self, stringToLog):
         #change eventually to log in a file but for now print is fine
-        print("<< %s" % stringToLog)
+        print(">> %s" % stringToLog)
 
     def registerAddon(self, **options):
         def decorator(f):
