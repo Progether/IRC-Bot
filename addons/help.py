@@ -41,9 +41,9 @@ class Helper(AddonBase):
                                                     .format(PREFIX),
                     "{0}As mentioned the root command is '{1}help'. It can be used on it's own but its power comes from arguments"
                                                     .format(INDENT, PREFIX),
-                    "{0}The help command usage is: '{1}help [modifier] [command or addon]"
+                    "{0}The help command usage is: '{1}help [modifier] [command or addon]'"
                                                     .format(INDENT, PREFIX),
-                    "{0}{0}(Modifiers)  long: extended help and descriptions, channel: redirect output".format(INDENT),
+                    "{0}{0}(Modifiers)  'verbose': extended help and descriptions, 'channel': redirect output to the channel".format(INDENT),
                     "{0}{0}(Commands/Addons) Any available command or addon title".format(INDENT) ]
     
     HELP_START   = ["Looking for something to do? Try running a '{0}help {1}' or '{0}help {2}' command"
