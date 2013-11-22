@@ -26,8 +26,8 @@ file_raw = """  [settings]
                 ## bot settings
                 command_prefix    = !!
                 quit              = !!quit      # depreciated
-                logAllToConsole   = True        # True or False
-                respondToNotFound = True        # True or False
+                logAllToConsole   = False        # True or False
+                respondToNotFound = False        # True or False
                 """
 
 def create_config():
