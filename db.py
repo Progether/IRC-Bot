@@ -7,22 +7,37 @@ class DB:
     def __init__(self):
         # info for all tables.  # increment version number when updating create (look at self.__on_upgrade() too)
         self.tables = {
-            ##   table     | vers  |  create statement
+            ##   table     | version,    schema
                 'tables'   : (1,
-                    "table_name text PRIMARY KEY, current_version integer NOT NULL"),
+                    "table_name text PRIMARY KEY, "+
+                    "current_version integer NOT NULL"),
                 'mail'     : (1,
-                    "sender text NOT NULL, recipient text NOT NULL, message text NOT NULL, id text NOT NULL"),
+                    "sender text NOT NULL, "+
+                    "recipient text NOT NULL, "+
+                    "message text NOT NULL, "+
+                    "id text NOT NULL"),
                 'projects' : (1,
-                    "name text NOT NULL, language text NULL, link text NULL, description text NULL, id text NOT NULL"), 
+                    "name text NOT NULL, "+
+                    "language text NULL, "+
+                    "link text NULL, "+
+                    "description text NULL, "+
+                    "id text NOT NULL"), 
                 'users'    : (1,
-                    "_id integer PRIMARY KEY DEFAULT nextval('serial'), nick text NOT NULL, userlevel integer NOT NULL DEFAULT 0, last_online integer NOT NULL"),
+                    "_id integer PRIMARY KEY DEFAULT nextval('serial'), "+
+                    "nick text NOT NULL, "+
+                    "userlevel integer NOT NULL DEFAULT 0, "+
+                    "last_online integer NOT NULL"),
                 'logs'     : (1,
-                    "_id integer PRIMARY KEY DEFAULT nextval('serial'), time type text NOT NULL, log text NOT NULL")
+                    "_id integer PRIMARY KEY DEFAULT nextval('serial'), "+
+                    "time type text NOT NULL, "+
+                    "log text NOT NULL")
                 }
+        # unmanaged_tables are left alone by the automatic table handling - don't get created, updated etc
         self.unmanaged_tables = ('logs', 'users', 'tables')
+        # 
         self.__ensure_all_tables_correct()
 
-#future ideas:  
+#future table ideas:  
 #  mail: "_id integer PRIMARY KEY DEFAULT nextval('serial'), sender text NOT NULL, recipient text NOT NULL, time_sent integer NOT NULL, message text NOT NULL"
 #  proj: "_id integer PRIMARY KEY DEFAULT nextval('serial'), name text NOT NULL, lang text NULL, owner text NOT NULL, link text NULL, descrip text NOT NULL, status text"
 #  user: possibly include timezone settings to localise timestamps on logs, mail etc for each user (maybe with a '!!me' command group)
