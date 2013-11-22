@@ -11,7 +11,7 @@ class ConfigParser:
             elif '=' in item:
                 items = item.split("=")
                 key = items[0].strip()
-                value = items[1].strip()
+                value = items[1].split()[0].strip()
                 self.config['settings'][key] = value
             else:
                 pass
