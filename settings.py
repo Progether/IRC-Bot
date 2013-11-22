@@ -4,7 +4,7 @@ import os
 current_directory = os.getcwd()
 FILE_NAME = "%s/settings.txt" % current_directory
 
-# default settings (and template for generated file contents)
+# default settings (and template for generated 'settings.txt file contents)
 file_raw = """  [settings]
                 
                 ## bot user:
@@ -16,25 +16,36 @@ file_raw = """  [settings]
                 network  = irc.freenode.net
                 port     = 6667
                 
-                ## database
+                ## database:
                 db_name = d2k2tmq3q2lk62
                 db_user = ddvzstnjeyvtkk
                 db_pass = qiJbYxnbFTlXBAtRiyRkXGkFub
                 db_host = ec2-23-23-80-55.compute-1.amazonaws.com
                 db_port = 5432
                 
-                ## bot commands
-                quit        = !!quit
-                bot_command = !!
+                ## bot settings
+                command_prefix    = !!
+                quit              = !!quit      # depreciated
+                logAllToConsole   = True        # True or False
+                respondToNotFound = True        # True or False
                 """
 
 def create_config():
-    config_file = open(FILE_NAME, 'w')
-    
-    file_content = file_raw.splitlines()
-    for line in file_content:
-        config_file.write(line.strip() + "\n")
-    config_file.close()
+    print(".. Attempting to create new configuration file..")
+    try:
+        config_file = open(FILE_NAME, 'w')
+        
+        file_content = file_raw.splitlines()
+        for line in file_content:
+            config_file.write(line.strip() + "\n")
+        print (".. Success")
+    except IOError:
+        print("!! Could not create new settings.txt configuration file")
+    finally:
+        try:
+            config_file.close()
+        except Exception:
+            pass
 
 def read_config():
     config = dict()
@@ -43,14 +54,16 @@ def read_config():
     while True:
         try:
             config_file.read_file(FILE_NAME)        # attempt to open existing file
+            break                                   # exit loop if not fails
+        except (FileNotFoundError):
+            print("!! settings.txt configuration file not found")
+        except (IOError):
+            print("!! error reading settings.txt configuration file")
+        if not created_new_file:
+            create_config()                     # try to create file if not exists
+        else:
+            config_file.read_raw(file_raw)      # else read direct from default string
             break
-        except (IOError, FileNotFoundError) as e:
-            print(e)
-            if not created_new_file:
-                create_config()                     # try to create file if not exists
-            else:
-                config_file.read_raw(file_raw)      # else read direct from default string
-                break
 
     
     config['nick']     = config_file.get('settings', 'nick')
@@ -65,16 +78,33 @@ def read_config():
     config['db_host'] = config_file.get('settings', 'db_host')
     config['db_port'] = config_file.get('settings', 'db_port')
     
-    config['quit']        = config_file.get('settings', 'quit')
-    config['bot_command'] = config_file.get('settings', 'bot_command')
+    config['command_prefix']    = config_file.get('settings', 'command_prefix')
+    config['quit']              = config_file.get('settings', 'quit')
+    config['logAllToConsole']   = config_file.get('settings', 'logAllToConsole')
+    config['respondToNotFound'] = config_file.get('settings', 'respondToNotFound')
     return config
 
 
 if __name__ == '__main__':
     create_config()
     conf = read_config()
-    print(conf['nick'])
-    print(conf['network'])
-    print(conf['port'])
-    print(conf['channel'])
-    print(conf['password'])
+    print("=== irc server ===")
+    print("nick: " +conf['nick'])
+    print("pass: " +conf['password'])
+    print("chan: " +conf['channel'])
+    print("netw: " +conf['network'])
+    print("port: " +conf['port'])
+    
+    print("=== database ==")
+    print("db_name: " +conf['db_name'])
+    print("db_user: " +conf['db_user'])
+    print("db_pass: " +conf['db_pass'])
+    print("db_host: " +conf['db_host'])
+    print("db_port: " +conf['db_port'])
+    
+    print("=== bot settings ===")
+    print("cmd_pref: " +conf['command_prefix'])
+    print("cmd_quit: " +conf['quit'])    
+    print("logAll:   " +(str) (conf['logAllToConsole']   == 'True'))
+    print("respond:  " +(str) (conf['respondToNotFound'] == 'True'))
+    
