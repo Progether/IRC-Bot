@@ -3,19 +3,18 @@ from db import DB
 import os,binascii
 import ircHelpers
 
-import re
 
 @ircBot.registerAddon()
 class Mail(AddonBase):
     prefix = ircBot.command_prefix
     
-    # All command groups should have a 'help_description' (long and short) that explains the addon package. Help will take care of listing the commands.
-    help_description_short = ("An IRC postal service")
-    help_description_long  = ("Leave messages for other users if they are offline. Messages will be delivered when they are next online.",)
+    # All command groups should have a 'help_description' (long and short versions) that explains the addon package. Help will take care of listing the commands.
+    help_description_short = ["An IRC postal service",]
+    help_description_long  = ["Leave messages for other users if they are offline. Messages will be delivered when they are next online.",]
     # Each command should have a help message to desc its usage. Register and assign help to command in 'self.helplist{}'
-    help_check  = ("%smymail :: Check your mailbox. Use to get ID for deleting mail too" % prefix,)
-    help_send   = ("%smail [user] [message] :: Send a message to the specified user" % prefix,)
-    help_delete = ("%sdelmail [id] :: Delete an old message with ID. Use %smymail to see IDs" % (prefix, prefix),)
+    help_check  = ["%smymail :: Check your mailbox. Use to get ID for deleting mail too" % prefix,]
+    help_send   = ["%smail [user] [message] :: Send a message to the specified user" % prefix,]
+    help_delete = ["%sdelmail [id] :: Delete an old message with ID. Use %smymail to see IDs" % (prefix, prefix),]
     
     def __init__(self):
         ##TODO verify table exists
