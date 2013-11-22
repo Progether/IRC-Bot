@@ -24,7 +24,7 @@ class Mail(AddonBase):
         mail_id = binascii.b2a_hex(os.urandom(3)).decode()
         mail_dict = { "sender" : sender, "recipient" : recipient, "message" : message.strip("\r"), "id" : mail_id }
         if DB().db_add_data("mail", mail_dict):
-            ircHelpers.pmInChannel(sender, "sent message to %s" % recipient)
+            ircHelpers.pmInChannel(sender, "sent message to %s: %s" % (recipient, message.strip("\r")))
             return True
         else:
             ircHelpers.pmInChannel(sender, "Failed to send message to %s" % recipient)
@@ -41,7 +41,7 @@ class Mail(AddonBase):
             return True
         else:
             for mail_tuple in data:
-                ircHelpers.privateMessage(mail_tuple[1], "%s says: %s id: %s" % (mail_tuple[0],mail_tuple[2],mail_tuple[3]))
+                ircHelpers.privateMessage(mail_tuple[1], "[ %s ] <%s>: %s" % (mail_tuple[3],mail_tuple[0],mail_tuple[2]))
             return True
 
     def delete_mail(self, arguments, messageInfo):

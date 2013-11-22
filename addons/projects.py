@@ -74,7 +74,8 @@ class Projects(AddonBase):
         proj_id = binascii.b2a_hex(os.urandom(3)).decode()
         proj_dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : proj_id }
         if DB().db_add_data("projects", proj_dict):
-            ircHelpers.sayInChannel("added project %s" % name)
+            ircHelpers.pmInChannel(messageInfo['user'], "Added project %s. Thank's for taking part!" % name)
+            ircHelpers.sayInChannel("Added new project: %s" % name)
         else:
             ircHelpers.pmInChannel("Error trying to add project %s" % name)
 
