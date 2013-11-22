@@ -51,7 +51,7 @@ def read_config():
     config = dict()
     config_file = ConfigParser()
     created_new_file = False
-    while True:
+    while True:     # loop until we have either a file to read or failing that the default string to use
         try:
             config_file.read_file(FILE_NAME)        # attempt to open existing file
             break                                   # exit loop if not fails
@@ -65,24 +65,31 @@ def read_config():
             config_file.read_raw(file_raw)      # else read direct from default string
             break
 
-    
-    config['nick']     = config_file.get('settings', 'nick')
-    config['password'] = config_file.get('settings', 'password')
-    config['channel']  = config_file.get('settings', 'channel')
-    config['network']  = config_file.get('settings', 'network')
-    config['port']     = config_file.get('settings', 'port')
-    
-    config['db_name'] = config_file.get('settings', 'db_name')
-    config['db_user'] = config_file.get('settings', 'db_user')
-    config['db_pass'] = config_file.get('settings', 'db_pass')
-    config['db_host'] = config_file.get('settings', 'db_host')
-    config['db_port'] = config_file.get('settings', 'db_port')
-    
-    config['command_prefix']    = config_file.get('settings', 'command_prefix')
-    config['quit']              = config_file.get('settings', 'quit')
-    config['logAllToConsole']   = config_file.get('settings', 'logAllToConsole')
-    config['respondToNotFound'] = config_file.get('settings', 'respondToNotFound')
-    return config
+    try:
+        config['nick']     = config_file.get('settings', 'nick')
+        config['password'] = config_file.get('settings', 'password')
+        config['channel']  = config_file.get('settings', 'channel')
+        config['network']  = config_file.get('settings', 'network')
+        config['port']     = config_file.get('settings', 'port')
+        
+        config['db_name'] = config_file.get('settings', 'db_name')
+        config['db_user'] = config_file.get('settings', 'db_user')
+        config['db_pass'] = config_file.get('settings', 'db_pass')
+        config['db_host'] = config_file.get('settings', 'db_host')
+        config['db_port'] = config_file.get('settings', 'db_port')
+        
+        config['command_prefix']    = config_file.get('settings', 'command_prefix')
+        config['quit']              = config_file.get('settings', 'quit')
+        config['logAllToConsole']   = config_file.get('settings', 'logAllToConsole')
+        config['respondToNotFound'] = config_file.get('settings', 'respondToNotFound')
+        return config
+    except Exception as e:
+        import sys
+        print("!! Failed to retrieve all required settings. Perhaps you need to regenerate your settings.txt")
+        print("!! Quitting with error:")
+        print(e)
+        sys.exit()
+        
 
 
 if __name__ == '__main__':
