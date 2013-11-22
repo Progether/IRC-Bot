@@ -1,5 +1,7 @@
 from core import ircBot
 
+debug = False
+
 def getNetwork():
     return ircBot.network
 
@@ -13,7 +15,7 @@ def getNick():
     return ircBot.nickname
 
 def send(thingToSend):
-    print(">> %s" % thingToSend)
+    if debug: print("<< %s" % thingToSend)
     ircBot.socket.send(thingToSend)
 
 def sayInChannel(thingToSay):

@@ -4,6 +4,7 @@ import ircHelpers
 @ircBot.registerAddon()
 class Speak(AddonBase):
     def __init__(self):
+        self.title = 'speak'
         self.channel = ircHelpers.getChannel()
         self.commandList = {"relay" : self.relay, "say" : self.speak }
         self.joinList = [self.sayHello]
