@@ -137,7 +137,8 @@ class Helper(AddonBase):
             
             # otherwise parse argument as a command
             else:
-                help_messages = self.__getHelp(split_arguments)
+                help_messages = self.__getHelpOnSingleCmd(split_arguments[0])
+                self.__sayToUser(user, help_messages)
         
     
     ### top level help compilation functions
@@ -166,20 +167,15 @@ class Helper(AddonBase):
     '''DONE'''
     def __getAllHelp(self, useShortFormat=True):
         help_messages = Helper.HELP_ALL_INTRO
-        addons = ircBot.addonList
-        for addon in addons:
-            help_messages = help_messages + self.__getFullAddonHelp(addon, useShortFormat)
+        for addon in ircBot.addonList:
+            help_messages.__add__(self.__getFullAddonHelp(addon, useShortFormat))
         return help_messages
 
-    '''DONE'''
+    '''DONE, CORRECT'''
     def __getFullAddonHelp(self, addon, useShortFormat=True):
-        messages = self.__getAddonIntro(addon, useShortFormat)
-        try:
-            for cmd in addon.commandList:
-                messages = messages + self.__getCommandHelpFromAddon(addon, cmd, useShortFormat, True)
-        except (AttributeError):
-            messages = messages + Helper.NONE_CMDS
-        return messages
+        help_messages = self.__getAddonIntro(addon, useShortFormat)
+        help_messages.__add__(self.__getAllCommandsHelpFromAddon(addon, useShortFormat))
+        return help_messages
     
     '''DONE, CORRECT'''
     def __getAllCompactAddonHelp(self):
@@ -202,7 +198,7 @@ class Helper(AddonBase):
     
     ### addon info extracty functions
     
-    '''DONE'''
+    '''DONE, CORRECT'''
     def __getAddonIntro(self, addon, useShortFormat=True):
         title = self.__getAddonTitle(addon)
         desc  = self.__getAddonDescription(addon, useShortFormat)
@@ -234,30 +230,38 @@ class Helper(AddonBase):
     
     ### command help extracty functions
     
-    
+    '''DONE, CORRECT'''
     def __getCommandHelpFromAddon(self, addon, command, useShortFormat=True, isChildComment=False):
+        # assumes already tested that cmd in addon.commandList
         desc = None
         try:
-            if command in addon.addonList:
-                desc = addon.helpList['command']
+            desc = addon.helpList[command]
         except (AttributeError, KeyError):
-            pass
-        if not desc:
             return self.__makeCommandNoneMessage(command, useShortFormat, isChildComment)
-        else:
-            msg = "{0}{1} :: {2}".format(Helper.PREFIX, command, desc)
-            return (msg,)
-            
+        msg = "{0}{1} :: {2}".format(Helper.PREFIX, command, desc)
+        if isChildComment:
+            msg = Helper.INDENT.__add__(msg)
+        return (msg,)
+    
+    '''DONE, CORRECT'''
+    def __getAllCommandsHelpFromAddon(self, addon, useShortFormat=True):
+        help_messages = list()
+        for command in addon.commandList:
+            try:
+                help_messages.__add__(self.__getCommandHelpFromAddon(addon, command, useShortFormat, True))
+            except:
+                help_messages.__add__((self.__makeCommandNoneMessage(command, useShortFormat, True),))
+        return help_messages
     
     
     
     ### formatting functions
     
-    '''DONE'''
+    '''DONE, CORRECT'''
     def __makeCommandNoneMessage(self, command, useShortFormat=True, isChildComment=True):
         msg = "{1}{2} :: {3}"
         if isChildComment:
-            msg = Helper.INDENT + msg
+            msg = Helper.INDENT.__add__(msg)
         if useShortFormat:
             return (msg.format(Helper.PREFIX, command, Helper.NONE_SHORT),)
         else:
