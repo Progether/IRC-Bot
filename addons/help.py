@@ -14,51 +14,52 @@ class Helper(AddonBase):
     ##TODO public method for sending help/usage to a user from within other addons
     
     # static strings
-    CASE_ALL     = ('all',)              # used to get help for all commands
-    CASE_CMDS    = ('commands', 'cmds')  # used to get commands for all addon packages
-    CASE_STARTER = ('start',)            # suggest a couple of commands to try
+    CASE_ALL     = ('all', 'a')              # used to get help for all commands
+    CASE_CMDS    = ('commands', 'cmds')      # used to get commands for all addon packages
+    CASE_STARTER = ('start', 's')            # suggest a couple of commands to try
     
-    MODIFIER_LONG    = ('long', 'verbose')   # give the extended version of the help
-    MODIFIER_CHANNEL = ('channel', 'chan')   # used to send response to channel instead of a user
+    MODIFIER_LONG    = ('verbose', 'long', 'v')   # give the extended version of the help
+    MODIFIER_CHANNEL = ('channel', 'chan', 'c')   # used to send response to channel instead of a user
     
     PREFIX = ircBot.command_prefix
     INDENT = "  "        # for formatting the output
     
     # defaults if no help exists or encountered error
-    NONE_LONG   = ("Sorry, we don't have any help for that command. Make sure you spelled it correctly or slap the dev for not including it",)
-    NONE_SHORT = ("No help found.",)
+    NONE_CMD_LONG    = ("Sorry, we don't have any help for this command. Make sure you spelled it correctly or slap the dev for not including it",)
+    NONE_CMD_SHORT   = ("No help found. I'll try harder next time.",)
     NONE_DESCR_LONG  = ("No description has been supplied. Maybe the developer didn't have enough coffee that morning?",)
     NONE_DESCR_SHORT = ("No description for this package. Shame on you dev, shame.",)
     NONE_CMDS  = ("Unable to access some or all of this addon's commands. Sorry  about that.",
-                       "{0}Perhaps you'd like to patch it for us??".format(INDENT))
+                  "{0}Perhaps you'd like to patch it for us??".format(INDENT))
     
     # main help message - response to bare 'help' command
     HELP_ROOT = ("Welcome to progether! There may not always be a lot of activity here, just stick around. IRC use requires some patience",
-                "All commands for the bots can also be done as private messages: /msg {0} {1}<command>.".format(ircBot.nickname, PREFIX))
+                 "{0}All commands for the bots can also be done by private messages: /msg {1} {2} [command] [args]".format(INDENT, ircBot.nickname, PREFIX),
+                 "{0}For a longer explanation use '{1}help {2}".format(INDENT, PREFIX, MODIFIER_LONG[0]))
     
     HELP_VERBOSE = ("This is the long help for the {0}help command. Sorry the length but there's a few things you need to know"
                                                     .format(PREFIX),
                     "{0}As mentioned the root command is '{1}help'. It can be used on it's own but its power comes from arguments"
-                                                    .format(Helper.INDENT, PREFIX),
+                                                    .format(INDENT, PREFIX),
                     "{0}The advanced usage is: '{1}help [modifier] [command or addon]"
-                                                    .format(Helper.INDENT, PREFIX),
-                    "{0}{0}(Modifiers)  long: extended help and descriptions, channel: redirect output".format(PREFIX),
-                    "{0}{0}(Commands/Addons) Any available command or addon title" )
+                                                    .format(INDENT, PREFIX),
+                    "{0}{0}(Modifiers)  long: extended help and descriptions, channel: redirect output".format(INDENT),
+                    "{0}{0}(Commands/Addons) Any available command or addon title".format(INDENT) )
     
-    HELP_START = ("Looking for something to do? Try running a '{0}help {1}' or '{0}help {2}' command"
-                                                    .format(PREFIX, Helper.CASE_ALL, Helper.CASE_CMDS),)
+    HELP_START   = ("Looking for something to do? Try running a '{0}help {1}' or '{0}help {2}' command"
+                                                    .format(PREFIX, CASE_ALL[0], CASE_CMDS[0]),)
     
-    HELP_INTRO = ("Welcome to progether, a reddit born collection of programmers teaching each other how not to do things.",
-                 "{0}Here's what this bot can do:".format(INDENT))
+    HELP_INTRO   = ("Welcome to progether, a reddit born collection of programmers teaching each other how not to do things.",
+                   "{0}Here's what this bot can do:".format(INDENT))
     
     # required description messages for this addon
     help_description_short = ("Get help on the bot's functionality",)
     help_description_long  = ("Addon to delve into the other addons and functionality on offer. Try '{0}help {1} {2}' to see it all"
-                                                    .format(PREFIX, Helper.MODIFIER_LONG[0], Helper.CASE_ALL[0]),)
+                                                    .format(PREFIX, MODIFIER_LONG[0], CASE_ALL[0]),)
     # required command descriptions (assigned in self.helpList{})
     help_help     = ("{0}help [modifier] [addon/command] :: Get help on bot's commands. For full usages: '{0}help verbose'"
                                                     .format(PREFIX),)
-    help_help_aid = ("{0}aid [user] [addon/command] :: Send help to another user. Usage is the same as for {0}help. See '{0}help verbose' for details"
+    help_aid = ("{0}aid [user] [addon/command] :: Send help to another user. Usage is the same as for {0}help. See '{0}help verbose' for details"
                                                     .format(PREFIX),)
     
     
@@ -68,25 +69,27 @@ class Helper(AddonBase):
     def __init__(self):
         self.title = 'helper'
         self.commandList = { 'help' : self.help,       'aid' : self.aid      }
-        self.helpList    = { 'help' : Helper.help_help,  'aid' : Helper.help_aid }
+        self.helpList    = { 'help' : self.help_help,  'aid' : self.help_aid }
         
 
-    '''DONE'''
+    '''DONE, CORRECT'''
     def help(self, arguments, messageInfo):
         user = messageInfo['user']
         args = arguments.split()
         
         self.__giveHelp(user, args)
             
-    '''DONE'''
+    '''DONE, CORRECT'''
     def aid(self, arguments, messageInfo):
         args = arguments.split()
         requesting_user = messageInfo['user']
         
+        # can't use without args so give them the help for the command
         if len(args) == 0:
             help_messages = self.__getCommandHelpFromAddon(self.title, 'aid', False, False)
             self.__sayToUser(requesting_user, help_messages)
         else:
+            ##TODO Perform test for user online and known to bot
             target_user = args.pop(0)
             announce_aid_msg = ('{0} thinks {1} needs some help'.format(requesting_user, target_user),)
             self.__sayToChannel(announce_aid_msg)
@@ -143,13 +146,13 @@ class Helper(AddonBase):
     
     ### top level help compilation functions
     
-    '''DONE'''
+    '''DONE, CORRECT'''
     def __getHelpOnSingleCmd(self, command):
         addons = ircBot.addonList
         for addon in addons:
             try:
                 if command == addon.title:
-                    return self.__getAddonHelpLong(addon)
+                    return self.__getFullAddonHelp(addon, False)
             except AttributeError:
                 pass
             try:
@@ -164,9 +167,9 @@ class Helper(AddonBase):
         # determine long or short format based on what it is. cmd = long, addon = short
         pass
     
-    '''DONE'''
+    '''DONE, CORRECT'''
     def __getAllHelp(self, useShortFormat=True):
-        help_messages = Helper.HELP_ALL_INTRO
+        help_messages = Helper.HELP_INTRO
         for addon in ircBot.addonList:
             help_messages.__add__(self.__getFullAddonHelp(addon, useShortFormat))
         return help_messages
@@ -263,9 +266,9 @@ class Helper(AddonBase):
         if isChildComment:
             msg = Helper.INDENT.__add__(msg)
         if useShortFormat:
-            return (msg.format(Helper.PREFIX, command, Helper.NONE_SHORT),)
+            return (msg.format(Helper.PREFIX, command, Helper.NONE_CMD_SHORT),)
         else:
-            return (msg.format(Helper.PREFIX, command, Helper.NONE_LONG),)
+            return (msg.format(Helper.PREFIX, command, Helper.NONE_CMD_LONG),)
     
     '''DONE, CORRECT, UNUSED'''
     def __makeInvokeCommand(self, command, useShortFormat=True, **args):

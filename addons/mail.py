@@ -21,7 +21,7 @@ class Mail(AddonBase):
         ##TODO verify table exists
         self.title = "mailbox"
         self.commandList = {"mail" : self.send_mail, "mymail" : self.get_mail,   "delmail" : self.delete_mail }
-        self.helpList    = {'mail' : Mail.help_send, 'mymail' : Mail.help_check, "delmail" : Mail.help_delete }
+        self.helpList    = {'mail' : self.help_send, 'mymail' : self.help_check, "delmail" : self.help_delete }
         self.joinList = [self.notify]
 
     def send_mail(self, arguments, messageInfo):
