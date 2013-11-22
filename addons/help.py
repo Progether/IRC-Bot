@@ -170,7 +170,7 @@ class Helper(AddonBase):
     
     def __getHelpForSingleCmd(self, command):
         command = command.lower()
-        addons = ircBot.addonList
+        addons = ircBot.addonList[:]
         if self.debug: print("== Num of loaded addons: %d" % len(addons))
         for addon in addons:
             try:
@@ -192,7 +192,8 @@ class Helper(AddonBase):
 
     def __getAllHelp(self, useShortFormat=True):
         help_messages = Helper.HELP_INTRO
-        for addon in ircBot.addonList:
+        addons = ircBot.addonList[:]
+        for addon in addons:
             help_messages.extend(self.__getFullAddonHelp(addon, useShortFormat))
         return help_messages
 
@@ -205,20 +206,22 @@ class Helper(AddonBase):
 
     def __getAllCompactAddonHelp(self):
         help_messages = []
-        for addon in ircBot.addonList:
+        addons = ircBot.addonList[:]
+        for addon in addons:
             help_messages.extend(self.__getCompactAddonHelp(addon))
         return help_messages
 
 
     def __getCompactAddonHelp(self, addon):
-        messages = self.__getAddonIntro(addon, True)
+        help_messages = self.__getAddonIntro(addon, True)
         cmds_summary = "{}Available commands: ".format(Helper.INDENT)
         try:
             for cmd in addon.commandList:
                 cmds_summary = "{0}{1}".format(cmds_summary, "{0}{1}, ".format(Helper.PREFIX, cmd)).rstrip(', ')
         except (AttributeError):
             if self.debug: print("== AttrErr in getCompactAddonHelp")
-        return messages.extend((cmds_summary,))
+        help_messages.extend((cmds_summary,))
+        return help_messages
     
     ### addon info extracty functions
     
@@ -256,7 +259,7 @@ class Helper(AddonBase):
     
     
     def __getAllAddonDescriptions(self, useShortFormat=True):
-        addons = ircBot.addonList
+        addons = ircBot.addonList[:]
         help_messages = Helper.HELP_ADDONS
         for addon in addons:
             help_messages.extend(self.__getAddonIntro(addon, useShortFormat, True))
