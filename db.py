@@ -4,43 +4,45 @@ import settings
 
 class DB:
     
-    def __init__(self):
-        # info for all tables.  # increment version number when updating create (look at self.__on_upgrade() too)
-        self.tables = {
-            ##   table     | version,    schema
-                'tables'   : (1,
+    # info for all tables.  # increment version number when updating create (look at self.__on_upgrade() too)
+    tables = {
+        ##   table     | version,    schema
+            'tables'   : (1,
                     "table_name text PRIMARY KEY, "+
                     "current_version integer NOT NULL"),
-                'mail'     : (1,
+            'mail'     : (1,
                     "sender text NOT NULL, "+
                     "recipient text NOT NULL, "+
                     "message text NOT NULL, "+
                     "id text NOT NULL"),
-                'projects' : (1,
+            'projects' : (1,
                     "name text NOT NULL, "+
                     "language text NULL, "+
                     "link text NULL, "+
                     "description text NULL, "+
                     "id text NOT NULL"), 
-                'users'    : (1,
+            'users'    : (1,
                     "_id integer PRIMARY KEY DEFAULT nextval('serial'), "+
                     "nick text NOT NULL, "+
                     "userlevel integer NOT NULL DEFAULT 0, "+
                     "last_online integer NOT NULL"),
-                'logs'     : (1,
+            'logs'     : (1,
                     "_id integer PRIMARY KEY DEFAULT nextval('serial'), "+
                     "time type text NOT NULL, "+
                     "log text NOT NULL")
-                }
-        # unmanaged_tables are left alone by the automatic table handling - don't get created, updated etc
-        self.unmanaged_tables = ('logs', 'users', 'tables')
-        # 
+            }
+    # unmanaged_tables are left alone by the automatic table handling - don't get created, updated etc
+    unmanaged_tables = ('logs', 'users', 'tables')
+    
+    # future table ideas:  
+    #   mail: "_id integer PRIMARY KEY DEFAULT nextval('serial'), sender text NOT NULL, recipient text NOT NULL, time_sent integer NOT NULL, message text NOT NULL"
+    #   proj: "_id integer PRIMARY KEY DEFAULT nextval('serial'), name text NOT NULL, lang text NULL, owner text NOT NULL, link text NULL, descrip text NOT NULL, status text"
+    #   user: possibly include timezone settings to localise timestamps on logs, mail etc for each user (maybe with a '!!me' command group)
+    
+    def __init__(self):
+        # test that all (managed) tables exist and are at correct version (version check not implemented yet)
         self.__ensure_all_tables_correct()
 
-#future table ideas:  
-#  mail: "_id integer PRIMARY KEY DEFAULT nextval('serial'), sender text NOT NULL, recipient text NOT NULL, time_sent integer NOT NULL, message text NOT NULL"
-#  proj: "_id integer PRIMARY KEY DEFAULT nextval('serial'), name text NOT NULL, lang text NULL, owner text NOT NULL, link text NULL, descrip text NOT NULL, status text"
-#  user: possibly include timezone settings to localise timestamps on logs, mail etc for each user (maybe with a '!!me' command group)
         
     def db_connect(self):
         config = settings.read_config()
@@ -241,10 +243,11 @@ class DB:
                 pass
 
     def __ensure_all_tables_correct(self):
-        all_tables = self.tables.keys()
+        all_tables = DB.tables.keys()
         all_successful = True
+        print(".. Checking all tables...")
         for table in all_tables:
-            if table in self.unmanaged_tables:
+            if table in DB.unmanaged_tables:
                 continue
             if self.__ensure_table_correct(table):
                 print(".. Table found: %s" % table)
