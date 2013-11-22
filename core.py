@@ -29,7 +29,7 @@ class IRCBot:
         self.addonList = list()
         
         ### tests for messages received from server
-        self.regexIsError             = re.compile(r"^ERROR*")
+        self.regexIsError             = re.compile(r"^ERROR.*|\\r\\nError.*")
         self.regexIsJoin              = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
         self.regexIsQuit              = re.compile(r":(?P<user>\w+)!.+\sPART\s")
         self.regexIsCommand           = re.compile(r"^%s{1}(?P<command>\w+)" % self.command_prefix)
@@ -42,7 +42,7 @@ class IRCBot:
 
     def run(self):
         self.socket.connect((self.network, self.port))
-        self.log(self.socket.recv(self.tempCacheSize).decode("UTF-8"))
+        self.logInfo(self.socket.recv(self.tempCacheSize).decode("UTF-8"))
         string = 'NICK %s \r\n' % self.nickname
         self.socket.send(string.encode("UTF-8"))
         string = 'USER %s some stuff :Python IRC\r\n' % self.nickname
@@ -62,8 +62,8 @@ class IRCBot:
             
             isError     = self.regexIsError.match(receivedData)
             if isError:
-                self.log("!! CAUGHT ERROR ::> " +receivedData)
-                self.log("!! Quitting")
+                self.logError("CAUGHT ERROR ::> " +receivedData)
+                self.logError("Quitting")
                 return 1
             
             isNickInUse = self.regexIsNickInUse.match(receivedData)
@@ -119,11 +119,18 @@ class IRCBot:
                 self.socket.send(string.encode("UTF-8"))
             else:
                 # moved log here to filter out ping/pong chatter
-                self.log(receivedData.encode('utf-8'))
+                self.logIncomming(receivedData.encode('utf-8'))
 
-    def log(self, stringToLog):
-        #change eventually to log in a file but for now print is fine
+    def logIncomming(self, stringToLog):
+        #change eventually to log in a database but for now print is fine
         print(">> %s" % stringToLog)
+    def logOutgoing(self, stringToLog):
+        #change eventually to log in a database but for now print is fine
+        print("<< %s" % stringToLog)
+    def logError(self, stringToLog):
+        print("!! %s" % stringToLog)
+    def logInfo(self, stringToLog):
+        print(".. %s" % stringToLog)
 
     def registerAddon(self, **options):
         def decorator(f):
