@@ -11,7 +11,12 @@ class ConfigParser:
             elif '=' in item:
                 items = item.split("=")
                 key = items[0].strip()
-                value = items[1].split()[0].strip()
+                try:
+                    value = items[1].split()[0].strip()
+                    if value.startswith('#'):
+                        value = ''
+                except (IndexError):
+                    value = ''
                 self.config['settings'][key] = value
             else:
                 pass
