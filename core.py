@@ -3,6 +3,10 @@ import socket, re
 from settings import read_config
 
 class IRCBot:
+    
+    logAllToConsole = True                  # dev boolean to toggle raw printing of all messages to console
+    respondToUnrecognisedCommands = True    # respond to user if they enter a command that isn't registered
+    
     def __init__(self, tempCacheSize=4096):
         conf = read_config()
         self.nickname    = conf['nick']
@@ -20,10 +24,11 @@ class IRCBot:
 
         self.regexIsError             = re.compile(r"^ERROR*")
         self.regexIsJoin              = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
-        self.regexIsCommand           = re.compile(r"(?P<command>%s..+)" % self.bot_command)
-        self.regexIsNickInUse         = re.compile(".*433.*")
-        self.regexCommandSplitCommand = re.compile(r"%s(?P<command>\w+)\s(?P<arguments>.*).*" % self.bot_command)
+        self.regexIsQuit              = re.compile(r":(?P<user>\w+)!.+\sPART\s")
+        self.regexIsCommand           = re.compile(r"^%s{1}(?P<command>\w+)" % self.bot_command)
+        self.regexCommandSplitCommand = re.compile(r"^%s{1}(?P<command>\w+)\s(?P<arguments>.*).*" % self.bot_command)
         self.regexIsChat              = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
+        self.regexIsNickInUse         = re.compile(".*433.*")
 
     def run(self):
         self.socket.connect((self.network, self.port))
@@ -41,6 +46,9 @@ class IRCBot:
         while True:
             receivedData = self.socket.recv(self.tempCacheSize).decode("UTF-8")
             messageInfo = dict()
+            
+            if (self.logAllToConsole):
+                self.log(receivedData.encode('utf-8'))
             
             isError     = self.regexIsError.match(receivedData)
             if isError:
@@ -72,8 +80,8 @@ class IRCBot:
                         if commandName in addon.commandList:
                             addon.commandList[commandName](commandArguments, messageInfo)
                             isAddon = "True"
-                    if isAddon == "False":
-                        string = "PRIVMSG %s :I don't know that command\r\n" % (self.channel)
+                    if isAddon == "False" and self.respondToUnrecognisedCommands:
+                        string = "NOTICE %s :I don't know that command\r\n" % (messageInfo['user'])
                         self.socket.send(string.encode('UTF-8'))
                 # else use chatlog to log message
                 elif messageInfo['channel'] == self.channel:
@@ -88,6 +96,13 @@ class IRCBot:
                     for joinMethod in addon.joinList:
                         joinMethod(isJoin.group('user'))
 
+            # if user leaves channel, update their database info
+            isQuit = self.regexIsQuit.match(receivedData)
+            if isQuit:
+                for addon in self.addonList:
+                    for quitMethod in addon.quitList:
+                        quitMethod(isQuit.group('user'))
+            
             #make sure we don't time out of server
             if receivedData.find('PING') != -1:
                 string = 'PONG %s \r\n' % receivedData.split()[1]
@@ -111,6 +126,7 @@ class AddonBase:
     behaviourList = list()
     messageList = list()
     joinList = list()
+    quitList = list()
 
 ircBot = IRCBot()
 
