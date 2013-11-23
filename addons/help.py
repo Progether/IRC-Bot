@@ -37,7 +37,7 @@ class Helper(AddonBase):
         # can't use without args so give them the help for the command
         if len(args) == 0:
             help_messages = self.__getCommandHelpFromAddon(self.title, 'aid', False)
-            ircHelpers.privateMessage(requesting_user, help_messages)
+            ircHelpers.privateMessage(requesting_user, *help_messages)
         else:
             ##TODO Perform test for user online and known to bot
             target_user = args.pop(0)
@@ -56,7 +56,7 @@ class Helper(AddonBase):
             if self.debug: print("== No args, giving default")
             help_message = ["Welcome to progether! There may not always be a lot of activity here, just stick around. IRC use requires some patience. All commands for the bots can also be done by private messages: /msg {0} {1}[command] [**args]".format(ircBot.nickname, Helper.PREFIX),
                     "{0}The format is: {1}help ['commands'/'addons'/commandName/addonName]".format(Helper.INDENT, Helper.PREFIX),]
-            ircHelpers.privateMessage(user, help_message)
+            ircHelpers.privateMessage(user, *help_message)
     
         # has arguments we need to parse
         else:
@@ -66,25 +66,25 @@ class Helper(AddonBase):
             if first_arg in ('all', 'a'):
                 if self.debug: print("== Found CASE_ALL")
                 help_messages = self.__getAllHelp()
-                ircHelpers.privateMessage(user, help_messages)
+                ircHelpers.privateMessage(user, *help_messages)
             
             # list all addon packages and descriptions
             elif first_arg in ('addons', 'add'):
                 if self.debug: print("== Found CASE_ADDONS")
                 help_messages = self.__getAllAddonDescriptions()
-                ircHelpers.privateMessage(user, help_messages)
+                ircHelpers.privateMessage(user, *help_messages)
                 
             # list all commands available in short form (for recap):
             elif first_arg in ('commands', 'cmds'):
                 if self.debug: print("== Found CASE_CMDS")
                 help_messages = self.__getAllCompactAddonHelp()
-                ircHelpers.privateMessage(user, help_messages)
+                ircHelpers.privateMessage(user, *help_messages)
             
             # otherwise parse argument as a command
             else:
                 if self.debug: print("== No mods left. Parse cmd: " +split_arguments[0])
                 help_messages = self.__getHelpForSingleCmd(split_arguments[0])
-                ircHelpers.privateMessage(user, help_messages)
+                ircHelpers.privateMessage(user, *help_messages)
     
 
     ### top level help compilation functions

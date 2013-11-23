@@ -22,7 +22,7 @@ def sayInChannel(thingToSay):
     string = 'PRIVMSG %s :%s\r\n' % (getChannel(), thingToSay)
     send(string.encode("UTF-8"))
 
-def privateMessage(user, messages):
+def privateMessage(user, *messages):
     for message in messages:
         string = 'PRIVMSG %s :%s\r\n' % (user, message)
         send(string.encode("UTF-8"))
