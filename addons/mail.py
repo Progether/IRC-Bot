@@ -8,9 +8,8 @@ import ircHelpers
 class Mail(AddonBase):
     prefix = ircBot.command_prefix
     
-    # All command groups should have a 'help_description' (long and short versions) that explains the addon package. Help will take care of listing the commands.
-    help_description_short = ["An IRC postal service",]
-    help_description_long  = ["Leave messages for other users if they are offline. Messages will be delivered when they are next online.",]
+    # All command groups should have a 'help_description' that explains the addon package. Help will take care of listing the commands.
+    help_description = ["An IRC postal service",]
     # Each command should have a help message to desc its usage. Register and assign help to command in 'self.helplist{}'
     help_check  = ["%smymail :: Check your mailbox. Use to get ID for deleting mail too" % prefix,"test 2nd line prints"]
     help_send   = ["%smail [user] [message] :: Send a message to the specified user" % prefix,]
