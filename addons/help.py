@@ -113,8 +113,11 @@ class Helper(AddonBase):
         
         # bare 'help' command on its own
         if num_args == 0:               
-            if self.debug: print("== No args, giving default")         
-            self.__sayDefaultToUser(user, useShortFormat)
+            if self.debug: print("== No args, giving default")
+            if sendToChannel:
+                self.__sayDefaultToChannel(useShortFormat)
+            else:
+                self.__sayDefaultToUser(user, useShortFormat)
 
         # has arguments we need to parse
         else:
@@ -127,19 +130,28 @@ class Helper(AddonBase):
                     help_messages = self.__getAllHelp(False)
                 else:
                     help_messages = self.__getAllHelp(True)
-                self.__sayToUser(user, help_messages)
+                if sendToChannel:
+                    self.__sayToChannel(help_messages)
+                else:
+                    self.__sayToUser(user, help_messages)
             
             # list all addon packages and descriptions
             elif first_arg in Helper.CASE_ADDONS:
                 if self.debug: print("== Found CASE_ADDONS")
                 help_messages = self.__getAllAddonDescriptions(False)
-                self.__sayToUser(user, help_messages)
+                if sendToChannel:
+                    self.__sayToChannel(help_messages)
+                else:
+                    self.__sayToUser(user, help_messages)
                 
             # list all commands available in short form (for recap):
             elif first_arg in Helper.CASE_CMDS:
                 if self.debug: print("== Found CASE_CMDS")
                 help_messages = self.__getAllCompactAddonHelp()
-                self.__sayToUser(user, help_messages)
+                if sendToChannel:
+                    self.__sayToChannel(help_messages)
+                else:
+                    self.__sayToUser(user, help_messages)
             
             # send output to channel:
             elif first_arg in Helper.MODIFIER_CHANNEL:
@@ -152,9 +164,9 @@ class Helper(AddonBase):
                 if self.debug: print("== Found MOD_VERBOSE")
                 split_arguments.pop(0)      # remove verbose modifier before recursing back
                 if len(split_arguments) == 0:
-                    self.__giveHelp(user, list(), False, times_run+1)
+                    self.__giveHelp(user, list(), False, times_run+1, sendToChannel)
                 else:
-                    self.__giveHelp(user, split_arguments, False, times_run+1)
+                    self.__giveHelp(user, split_arguments, False, times_run+1, sendToChannel)
             
             # otherwise parse argument as a command
             else:
@@ -340,7 +352,10 @@ class Helper(AddonBase):
             self.__sayToUser(user, Helper.HELP_ROOT)
         else:
             self.__sayToUser(user, Helper.HELP_VERBOSE)
-                    #
-                    #
-    help_project = "To view all projects: !!projects. To add a project: !!addproject <name> <language> <description>. " \
-                   +"To delete a project: !!delproject <id>. Name and programming languages should not contain spaces."        
+    
+    def __sayDefaultToChannel(self, useShortFormat=True):
+        if useShortFormat:
+            self.__sayToChannel(Helper.HELP_ROOT)
+        else:
+            self.__sayToChannel(Helper.HELP_VERBOSE)
+            
