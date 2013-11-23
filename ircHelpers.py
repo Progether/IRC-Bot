@@ -22,9 +22,10 @@ def sayInChannel(thingToSay):
     string = 'PRIVMSG %s :%s\r\n' % (getChannel(), thingToSay)
     send(string.encode("UTF-8"))
 
-def privateMessage(user, message):
-    string = 'PRIVMSG %s :%s\r\n' % (user, message)
-    send(string.encode("UTF-8"))
+def privateMessage(user, *messages):
+    for message in messages:
+        string = 'PRIVMSG %s :%s\r\n' % (user, message)
+        send(string.encode("UTF-8"))
     
 def pmInChannel(user, message):
     string = 'NOTICE %s :%s\r\n' % (user, message)
