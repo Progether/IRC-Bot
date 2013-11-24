@@ -1,4 +1,7 @@
 from core import ircBot
+from queue import Queue
+from threading import Thread
+import time
 
 debug = False
 
@@ -14,9 +17,22 @@ def getChannel():
 def getNick():
     return ircBot.nickname
 
+def flood_control():
+    while True:
+        item = ircBot.q.get()
+        ircBot.socket.send(item)
+        time.sleep(.8)
+        ircBot.q.task_done()
+
+def start_queue_thread():
+    ircBot.q = Queue()
+    thread = Thread(target=flood_control)
+    thread.daemon = True
+    thread.start()
+
 def send(thingToSend):
     if debug: print("<< %s" % thingToSend)
-    ircBot.socket.send(thingToSend)
+    ircBot.q.put(thingToSend)
 
 def sayInChannel(thingToSay):
     string = 'PRIVMSG %s :%s\r\n' % (getChannel(), thingToSay)

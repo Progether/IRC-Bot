@@ -53,6 +53,8 @@ class IRCBot:
         self.mainLoop()
 
     def mainLoop(self):
+        import ircHelpers    # dirty hack - should be moved somewhere more applicable (ie at !!nick)
+        ircHelpers.start_queue_thread()
         while True:
             receivedData = self.socket.recv(self.tempCacheSize).decode("UTF-8")
             messageInfo = dict()
@@ -68,7 +70,6 @@ class IRCBot:
             
             isNickInUse = self.regexIsNickInUse.match(receivedData)
             if isNickInUse:
-                import ircHelpers    # dirty hack - should be moved somewhere more applicable (ie at !!nick)
                 ircHelpers.sayInChannel("Nick is already in use")
             
             isChat = self.regexIsChat.match(receivedData)
