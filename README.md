@@ -2,13 +2,14 @@ Progether IRC-Bot
 =======
 The progether IRC bot was written by the subreddit community /r/progether and is still in progress.
 Our bot is currently up on heroku.
+
 It is currently one of the active Python programming projects as well.
 For information you can visit the community http://www.reddit.com/r/progether/
 
 
 Usage
 -----------
-*Most commands should be used while messaging the bot, so you don't flood the channel*
+Most commands should be used while messaging the bot, so you don't flood the channel
 
 Note: To list all commands after messaging the bot, simply type "!!help commands"
 
@@ -16,13 +17,13 @@ This can be done by typing "/msg progether !!help"
 	This will send a message to the bot ,and it will message you.
 
  Commands
- ===============
+
 **Mailbox** - A simple user to user mail service within IRC.
 
 To view all commands for mailbox simply type "!!help mailbox"
 
 	 Mailbox Commands
-#############################
+
   !!mail :: !!mail [user] [message] :: Send a message to the specified user
 
   !!delmail :: !!delmail [id] :: Delete an old message with ID. Use !!mymail to see IDs
@@ -34,7 +35,7 @@ To view all commands for mailbox simply type "!!help mailbox"
 To view all commands for mailbox simply type "!!help info"
 
 	 Info Commands
-#############################
+
   !!irc :: server: irc.freenode.net, channel: #reddit-progether
 
   !!reddit :: http://reddit.com/r/progether/
@@ -43,12 +44,12 @@ To view all commands for mailbox simply type "!!help info"
 
   !!wiki :: http://www.reddit.com/r/progether/wiki/index
 
-Projects
+**Projects**
 
 To view all commands for projects simply type "!!help projects"
 
 	 Project Commands
-#############################
+
   !!projects :: No description found
 
   !!addproject :: Adds a project to the listing
@@ -62,7 +63,7 @@ To view all commands for projects simply type "!!help projects"
 To view all commands for speak simply type "!!help speak"
 
 	 Speak Commands
-#############################
+
   !!speak :: No description found
 
   !!say :: Says typed text into channel
