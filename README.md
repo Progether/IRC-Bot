@@ -75,7 +75,7 @@ To view all commands for speak simply type "!!help speak"
 To view all commands for Chatlog simply type "!!help chatlog"
 
 	 Chatlog Commands
-#############################
+
   !!lastlog :: Says the last user's message in channel
 
   !!readlog :: Prints out the last chat log to a certain line amount ie: !!lastlog50
@@ -83,7 +83,7 @@ To view all commands for Chatlog simply type "!!help chatlog"
  **Helper** - Get help on the bot's functionality
 
  	 Helper Commands
- #############################
+
   !!aid :: !!aid [user] [help arguments] :: Send help to another user. Usage is the same as for !!help.
 
 
