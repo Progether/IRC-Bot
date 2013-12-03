@@ -21,7 +21,7 @@ def flood_control():
     while True:
         item = ircBot.q.get()
         ircBot.socket.send(item)
-        time.sleep(.8)
+        time.sleep(1)
         ircBot.q.task_done()
 
 def start_queue_thread():

@@ -14,7 +14,7 @@ file_raw = """  [settings]
                 ## channel:
                 channel  = reddit-progether
                 network  = irc.freenode.net
-                port     = 6667
+                port     = 6697
                 
                 ## database:
                 db_name = d2k2tmq3q2lk62
