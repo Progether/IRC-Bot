@@ -7,9 +7,17 @@ import re
 
 @ircBot.registerAddon()
 class Projects(AddonBase):
-    
+
     def __init__(self):
         ##TODO verify table exists
+
+        help_description = ["A command to view all active projects"]
+
+        help_projects  = ["%sprojects :: Lists all active projects,id's, and repository links." % prefix]
+        help_addproject  = ["%saddproject :: Adds a project to the listing" % prefix]
+        help_delproject  = ["%sdelproject :: Deletes a project from the listing" % prefix]
+
+        self.helpList    = {'projects' : self.help_projects, 'addproject' : self.help_addproject, "delproject" : self.help_delproject }
         self.commandList = { "projects" : self.list_projects, "addproject" : self.add_projects, "delproject" : self.delete_projects }
 
     def list_projects(self, arguments, messageInfo):
@@ -44,10 +52,10 @@ class Projects(AddonBase):
                                      "name".ljust(max_name),
                                      "description".ljust(max_desc),
                                      "   link".ljust(max_link))
-            
+
             ircHelpers.sayInChannel(title_row)
             ircHelpers.sayInChannel('-'*len(title_row))
-            
+
             for proj_tuple in data:
                 ircHelpers.sayInChannel(
                                        #(id) lang [[ name ]]  desc  << link >>
@@ -71,7 +79,7 @@ class Projects(AddonBase):
         except IndexError:
             ircHelpers.pmInChannel(messageInfo['user'], "Correct usage is: !!addproject [name] [language] [link] [description]")
             return False
-        
+
         proj_id = binascii.b2a_hex(os.urandom(3)).decode()
         proj_dict = { "name" : name, "language" : language, "link" : link, "description" : description.strip("\r"), "id" : proj_id }
         if DB().db_add_data("projects", proj_dict):

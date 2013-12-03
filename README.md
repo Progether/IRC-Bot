@@ -50,8 +50,6 @@ To view all commands for projects simply type "!!help projects"
 
 	 Project Commands
 
-  !!projects :: No description found
-
   !!addproject :: Adds a project to the listing
 
   !!delproject :: Deletes a project from the listing
@@ -78,7 +76,9 @@ To view all commands for Chatlog simply type "!!help chatlog"
 
   !!lastlog :: Says the last user's message in channel
 
-  !!readlog :: Prints out the last chat log to a certain line amount ie: !!lastlog50
+  !!readlog :: Prints out the last chat log to a certain line amount ie: !!lastlog 50
+
+  Note: If a numerical value is not given the readlog command will default to 10.
 
  **Helper** - Get help on the bot's functionality
 
