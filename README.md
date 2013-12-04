@@ -40,7 +40,7 @@ To view all commands for mailbox simply type "!!help info"
 
   !!reddit :: http://reddit.com/r/progether/
 
-  !!nick :: gives information on a Nick
+  !!nick :: Changes the bot's current nick
 
   !!wiki :: http://www.reddit.com/r/progether/wiki/index
 
