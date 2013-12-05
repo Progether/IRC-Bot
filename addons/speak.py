@@ -3,15 +3,16 @@ import ircHelpers
 
 @ircBot.registerAddon()
 class Speak(AddonBase):
+    prefix = ircBot.command_prefix
+
+    help_description = ["Commands to make the bot say something in channel."]
+
+    help_speak  = ["%sspeak :: No description found" % prefix]
+    help_say  = ["%ssay :: Says typed text into channel" % prefix]
+    help_relay  = ["%srelay :: Relays a message from bot to channel." % prefix]
+
+
     def __init__(self):
-
-        help_description = ["Commands to make the bot say something in channel."]
-
-        help_speak  = ["%sspeak :: No description found" % prefix]
-        help_say  = ["%ssay :: Says typed text into channel" % prefix]
-        help_relay  = ["%srelay :: Relays a message from bot to channel." % prefix]
-
-
         self.title = 'speak'
         self.channel = ircHelpers.getChannel()
         self.commandList = {"relay" : self.relay, "say" : self.speak }

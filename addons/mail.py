@@ -7,14 +7,14 @@ import ircHelpers
 @ircBot.registerAddon()
 class Mail(AddonBase):
     prefix = ircBot.command_prefix
-    
+
     # All command groups should have a 'help_description' that explains the addon package. Help will take care of listing the commands.
     help_description = ["An IRC postal service",]
     # Each command should have a help message to desc its usage. Register and assign help to command in 'self.helplist{}'
     help_check  = ["%smymail :: Check your mailbox. Use to get ID for deleting mail too" % prefix,"test 2nd line prints"]
     help_send   = ["%smail [user] [message] :: Send a message to the specified user" % prefix,]
     help_delete = ["%sdelmail [id] :: Delete an old message with ID. Use %smymail to see IDs" % (prefix, prefix),]
-    
+
     def __init__(self):
         ##TODO verify table exists
         self.title = "mailbox"
@@ -61,7 +61,7 @@ class Mail(AddonBase):
         else:
             ircHelpers.pmInChannel(messageInfo["user"], "Error while deleting message")
             return False
-        
+
     def notify(self, user):
         data = DB().db_get_data("mail", "recipient", user)
         if data == None:

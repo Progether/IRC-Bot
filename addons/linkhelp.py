@@ -7,13 +7,12 @@ import string
 
 @ircBot.registerAddon()
 class LinkHelp(AddonBase):
+    prefix = ircBot.command_prefix
+
+    help_description = ["%sGet help on the bot's functionality." % prefix]
+    help_aid  = ["%said [user] [help arguments] :: Send help to another user. Usage is the same as for %shelp." % (prefix,prefix)]
+
     def __init__(self):
-
-        help_description = ["Get help on the bot's functionality"]
-
-        help_aid  = ["%said [user] [help arguments] :: Send help to another user. Usage is the same as for %shelp." % prefix]
-
-
         self.commandList = {}
         self.messageList = [self.parse_for_links]
 

@@ -7,16 +7,16 @@ import re
 
 @ircBot.registerAddon()
 class Projects(AddonBase):
+    prefix = ircBot.command_prefix
+
+    help_description = ["A command to view all active projects"]
+
+    help_projects  = ["%sprojects :: Lists all active projects,id's, and repository links." % prefix]
+    help_addproject  = ["%saddproject :: Adds a project to the listing" % prefix]
+    help_delproject  = ["%sdelproject :: Deletes a project from the listing" % prefix]
 
     def __init__(self):
         ##TODO verify table exists
-
-        help_description = ["A command to view all active projects"]
-
-        help_projects  = ["%sprojects :: Lists all active projects,id's, and repository links." % prefix]
-        help_addproject  = ["%saddproject :: Adds a project to the listing" % prefix]
-        help_delproject  = ["%sdelproject :: Deletes a project from the listing" % prefix]
-
         self.helpList    = {'projects' : self.help_projects, 'addproject' : self.help_addproject, "delproject" : self.help_delproject }
         self.commandList = { "projects" : self.list_projects, "addproject" : self.add_projects, "delproject" : self.delete_projects }
 
