@@ -76,7 +76,7 @@ To view all commands for Chatlog simply type "!!help chatlog"
 
   !!lastlog :: Says the last user's message in channel
 
-  !!readlog :: Prints out the last chat log to a certain line amount ie: !!lastlog 50
+  !!readlog :: Prints out the last chat log to a certain line amount ie: !!readlog 50
 
   Note: If a numerical value is not given the readlog command will default to 10.
 
