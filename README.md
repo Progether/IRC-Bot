@@ -6,6 +6,9 @@ Our bot is currently up on heroku.
 It is currently one of the active Python programming projects as well.
 For information you can visit the community http://www.reddit.com/r/progether/
 
+ This project needs the "requests" and "psycopg2" libraries installed.
+
+ Both of these can be installed using pip like this: pip install requests , and pip install psycopg2.
 
 Usage
 -----------
