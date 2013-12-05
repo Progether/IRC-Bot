@@ -16,6 +16,10 @@ Note: To list all commands after messaging the bot, simply type "!!help commands
 This can be done by typing "/msg progether !!help"
 	This will send a message to the bot ,and it will message you.
 
+ This project needs the "requests" and "psycopg2" libraries installed.
+
+ Both of these can be installed using pip like this: pip install requests , and pip install psycopg2.
+
  Commands
 
 **Mailbox** - A simple user to user mail service within IRC.
