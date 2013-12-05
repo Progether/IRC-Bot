@@ -40,7 +40,7 @@ To view all commands for mailbox simply type "!!help info"
 
   !!reddit :: http://reddit.com/r/progether/
 
-  !!nick :: gives information on a Nick
+  !!nick :: Changes the bot's current nick
 
   !!wiki :: http://www.reddit.com/r/progether/wiki/index
 
@@ -49,8 +49,6 @@ To view all commands for mailbox simply type "!!help info"
 To view all commands for projects simply type "!!help projects"
 
 	 Project Commands
-
-  !!projects :: No description found
 
   !!addproject :: Adds a project to the listing
 
@@ -78,7 +76,9 @@ To view all commands for Chatlog simply type "!!help chatlog"
 
   !!lastlog :: Says the last user's message in channel
 
-  !!readlog :: Prints out the last chat log to a certain line amount ie: !!lastlog50
+  !!readlog :: Prints out the last chat log to a certain line amount ie: !!readlog 50
+
+  Note: If a numerical value is not given the readlog command will default to 10.
 
  **Helper** - Get help on the bot's functionality
 

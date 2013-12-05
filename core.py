@@ -3,10 +3,10 @@ import socket, re
 from settings import read_config
 
 class IRCBot:
-    
+
     logAllToConsole = False                 # dev boolean to toggle raw printing of all messages to console
     respondToUnrecognisedCommands = False   # respond to user if they enter a command that isn't registered
-    
+
     def __init__(self, tempCacheSize=4096):
         ### configuration
         conf = read_config()
@@ -15,19 +15,19 @@ class IRCBot:
         self.channel     = '#%s' % conf['channel']
         self.network     = conf['network']
         self.port        = int(conf['port'])
-        
+
         self.command_prefix    = conf['command_prefix']
         self.quitCmd           = conf['quit']
         self.logAllToConsole   = conf['logAllToConsole'] == 'True'
         self.respondToNotFound = conf['respondToNotFound'] == 'True'
-        
+
         ### connection
         self.socket        = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.tempCacheSize = tempCacheSize
 
         ### addons
         self.addonList = list()
-        
+
         ### tests for messages received from server
         self.regexIsError             = re.compile(r"^ERROR.*|\\r\\nError.*")
         self.regexIsJoin              = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
@@ -38,7 +38,7 @@ class IRCBot:
         self.regexIsNickInUse         = re.compile(r".*\s433\s.?%s.*" % self.nickname)
         self.regexIsAskForLogin       = re.compile(r".*ʌ")
         # '...freenode.net 461 indibot JOIN :Not enough parameters\r\n'
-        
+
 
     def run(self):
         self.socket.connect((self.network, self.port))
@@ -49,7 +49,7 @@ class IRCBot:
         self.socket.send(string.encode("UTF-8"))
         string = 'JOIN %s \r\n' % self.channel
         self.socket.send(string.encode("UTF-8"))
-        
+
         self.mainLoop()
 
     def mainLoop(self):
@@ -58,20 +58,20 @@ class IRCBot:
         while True:
             receivedData = self.socket.recv(self.tempCacheSize).decode("UTF-8")
             messageInfo = dict()
-            
+
             if (self.logAllToConsole):
                 print("-- %s" % receivedData.encode('utf-8'))
-            
+
             isError     = self.regexIsError.match(receivedData)
             if isError:
                 self.logError("CAUGHT ERROR ::> " +receivedData)
                 self.logError("Quitting")
                 return 1
-            
+
             isNickInUse = self.regexIsNickInUse.match(receivedData)
             if isNickInUse:
                 ircHelpers.sayInChannel("Nick is already in use")
-            
+
             isChat = self.regexIsChat.match(receivedData)
             if isChat:
                 # parse message
@@ -94,12 +94,12 @@ class IRCBot:
                     if not isAddon and self.respondToNotFound:
                         string = "NOTICE %s :I don't know that command\r\n" % (messageInfo['user'])
                         self.socket.send(string.encode('UTF-8'))
-                
+
                 elif messageInfo['channel'] == self.channel:
                     for addon in self.addonList:
                         for messageMethod in addon.messageList:
                             messageMethod(messageInfo)
-                          
+
             # if new join, greet
             isJoin = self.regexIsJoin.match(receivedData)
             if isJoin:
@@ -113,7 +113,7 @@ class IRCBot:
                 for addon in self.addonList:
                     for quitMethod in addon.quitList:
                         quitMethod(isQuit.group('user'))
-            
+
             #make sure we don't time out of server
             if receivedData.find('PING') != -1:
                 string = 'PONG %s \r\n' % receivedData.split()[1]
@@ -147,4 +147,3 @@ class AddonBase:
     quitList = list()
 
 ircBot = IRCBot()
-
