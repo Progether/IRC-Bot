@@ -55,7 +55,7 @@ class Helper(AddonBase):
         if num_args == 0:
             if self.debug: print("== No args, giving default")
             help_message = ["Welcome to progether! There may not always be a lot of activity here, just stick around. IRC use requires some patience. All commands for the bots can also be done by private messages: /msg {0} {1}[command] [**args]".format(ircBot.nickname, Helper.PREFIX),
-                    "{0}The format is: {1}help ['commands'/'addons'/commandName/addonName]".format(Helper.INDENT, Helper.PREFIX),]
+                    "{0}The format is: {1}help ['commands'/'addons'/commandName/addonName] For more information on useage checkout https://github.com/Progether/IRC-Bot/blob/master/README.md".format(Helper.INDENT, Helper.PREFIX),]
             ircHelpers.privateMessage(user, *help_message)
 
         # has arguments we need to parse

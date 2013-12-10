@@ -16,6 +16,8 @@ Most commands should be used while messaging the bot, so you don't flood the cha
 
 Note: To list all commands after messaging the bot, simply type "!!help commands"
 
+If you are a Windows user you can simply run this program by running "py -3 main.py" if you have multiple versions installed.
+
 This can be done by typing "/msg progether !!help"
 	This will send a message to the bot ,and it will message you.
 
