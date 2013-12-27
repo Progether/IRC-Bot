@@ -16,7 +16,6 @@ class Projects(AddonBase):
     help_delproject  = ["%sdelproject :: Deletes a project from the listing" % prefix]
 
     def __init__(self):
-        ##TODO verify table exists
         self.helpList    = {'projects' : self.help_projects, 'addproject' : self.help_addproject, "delproject" : self.help_delproject }
         self.commandList = { "projects" : self.list_projects, "addproject" : self.add_projects, "delproject" : self.delete_projects }
 
@@ -29,9 +28,9 @@ class Projects(AddonBase):
         else:
             data = DB().db_get_all_data("projects")
         if data == None:
-            ircHelpers.pmInChannel(user, "Error while trying to retrieve Projects")
+            ircHelpers.privateMessage(user, "Error while trying to retrieve Projects")
         if len(data) == 0:
-            ircHelpers.pmInChannel(user, "There are no listed projects")
+            ircHelpers.privateMessage(user, "There are no listed projects")
         else:
             max_name = len("name")
             max_lang = len("language")
@@ -53,11 +52,11 @@ class Projects(AddonBase):
                                      "description".ljust(max_desc),
                                      "   link".ljust(max_link))
 
-            ircHelpers.sayInChannel(title_row)
-            ircHelpers.sayInChannel('-'*len(title_row))
+            ircHelpers.privateMessage(title_row)
+            ircHelpers.privateMessage('-'*len(title_row))
 
             for proj_tuple in data:
-                ircHelpers.sayInChannel(
+                ircHelpers.privateMessage(
                                        #(id) lang [[ name ]]  desc  << link >>
                                        "(%s)  %s [[ %s ]]  %s  (( %s ))"
                                        % (proj_tuple[4],                  # id
@@ -77,7 +76,7 @@ class Projects(AddonBase):
             message.pop(0)
             description = ' '.join(message)
         except IndexError:
-            ircHelpers.pmInChannel(messageInfo['user'], "Correct usage is: !!addproject [name] [language] [link] [description]")
+            ircHelpers.privateMessage(messageInfo['user'], "Correct usage is: !!addproject [name] [language] [link] [description]")
             return False
 
         proj_id = binascii.b2a_hex(os.urandom(3)).decode()
@@ -86,15 +85,15 @@ class Projects(AddonBase):
             ircHelpers.pmInChannel(messageInfo['user'], "Added project %s. Thank's for taking part!" % name)
             ircHelpers.sayInChannel("Added new project: %s" % name)
         else:
-            ircHelpers.pmInChannel("Error trying to add project %s" % name)
+            ircHelpers.privateMessage("Error trying to add project %s" % name)
 
     def delete_projects(self, arguments, messageInfo):
         if not arguments.strip('\r').strip():
-            ircHelpers.pmInChannel(messageInfo['user'], "Correct usage is: !!delproject [project_id]")
+            ircHelpers.privateMessage(messageInfo['user'], "Correct usage is: !!delproject [project_id]")
             return False
         if DB().db_delete_data("projects", "id", arguments.strip('\r')):
-            ircHelpers.sayInChannel("Deleted project (if available)")
+            ircHelpers.privateMessage("Deleted project (if available)")
             return True
         else:
-            ircHelpers.sayInChannel("Error trying to delete project")
+            ircHelpers.privateMessage("Error trying to delete project")
             return False
