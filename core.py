@@ -1,48 +1,55 @@
-import socket, re
+import socket
+import re
 
-from settings import read_config
 
 class IRCBot:
 
     logAllToConsole = False                 # dev boolean to toggle raw printing of all messages to console
     respondToUnrecognisedCommands = False   # respond to user if they enter a command that isn't registered
 
-    def __init__(self, tempCacheSize=4096):
-        ### configuration
-        conf = read_config()
-        self.nickname    = conf['nick']
-        self.password    = conf['password']
-        self.channel     = '#%s' % conf['channel']
-        self.network     = conf['network']
-        self.port        = int(conf['port'])
+    def __init__(self, conf, temp_cache_size=4096):
+        """
+        Creates a new IRCBot object.
 
-        self.command_prefix    = conf['command_prefix']
-        self.quitCmd           = conf['quit']
-        self.logAllToConsole   = conf['logAllToConsole'] == 'True'
-        self.respondToNotFound = conf['respondToNotFound'] == 'True'
+        :param conf: the configuration dictionary to use to connect, etc.
+        :type conf: dict
+        """
+        # If no configuration provided, error out with a ConfError
+        if conf == {}:
+            raise ConfigurationError("No configuration provided")
+
+        # Otherwise, store the useful config info
+        self.nickname = conf['user']['nick']
+        self.password = conf['user']['password']
+        self.channel = '#%s' % conf['channel']['name']
+        self.network = conf['channel']['network']
+        self.port = conf['channel']['port']
+
+        self.command_prefix = conf['settings']['command_prefix']
+        self.logAllToConsole = conf['settings']['logAllToConsole']
+        self.respondToNotFound = conf['settings']['respondToNotFound']
 
         ### connection
-        self.socket        = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.tempCacheSize = tempCacheSize
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.temp_cache_size = temp_cache_size
 
         ### addons
         self.addonList = list()
 
         ### tests for messages received from server
-        self.regexIsError             = re.compile(r"^ERROR.*|\\r\\nError.*")
-        self.regexIsJoin              = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
-        self.regexIsQuit              = re.compile(r":(?P<user>\w+)!.+\sPART\s")
-        self.regexIsCommand           = re.compile(r"^%s{1}(?P<command>\w+)" % self.command_prefix)
+        self.regexIsError = re.compile(r"^ERROR.*|\\r\\nError.*")
+        self.regexIsJoin = re.compile(r":(?P<user>\w+)!.+\sJOIN\s")
+        self.regexIsQuit = re.compile(r":(?P<user>\w+)!.+\sPART\s")
+        self.regexIsCommand = re.compile(r"^%s{1}(?P<command>\w+)" % self.command_prefix)
         self.regexCommandSplitCommand = re.compile(r"^%s{1}(?P<command>\w+)\s(?P<arguments>.*).*" % self.command_prefix)
-        self.regexIsChat              = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
-        self.regexIsNickInUse         = re.compile(r".*\s433\s.?%s.*" % self.nickname)
-        self.regexIsAskForLogin       = re.compile(r".*ʌ")
+        self.regexIsChat = re.compile(r":(?P<user>\w+)!(?P<isp>.+)\sPRIVMSG\s(?P<channel>[#\w-]+)\s:(?P<message>.+)")
+        self.regexIsNickInUse = re.compile(r".*\s433\s.?%s.*" % self.nickname)
+        self.regexIsAskForLogin = re.compile(r".*ʌ")
         # '...freenode.net 461 indibot JOIN :Not enough parameters\r\n'
-
 
     def run(self):
         self.socket.connect((self.network, self.port))
-        self.logInfo(self.socket.recv(self.tempCacheSize).decode("UTF-8"))
+        self.logInfo(self.socket.recv(self.temp_cache_size).decode("UTF-8"))
         string = 'NICK %s \r\n' % self.nickname
         self.socket.send(string.encode("UTF-8"))
         string = 'USER %s some stuff :Python IRC\r\n' % self.nickname
@@ -50,13 +57,13 @@ class IRCBot:
         string = 'JOIN %s \r\n' % self.channel
         self.socket.send(string.encode("UTF-8"))
 
-        self.mainLoop()
+        self.main_loop()
 
-    def mainLoop(self):
+    def main_loop(self):
         import ircHelpers    # dirty hack - should be moved somewhere more applicable (ie at !!nick)
         ircHelpers.start_queue_thread()
         while True:
-            receivedData = self.socket.recv(self.tempCacheSize).decode("UTF-8")
+            receivedData = self.socket.recv(self.temp_cache_size).decode("UTF-8")
             messageInfo = dict()
 
             if (self.logAllToConsole):
@@ -139,6 +146,7 @@ class IRCBot:
             return f
         return decorator
 
+
 class AddonBase:
     commandList = dict()
     behaviourList = list()
@@ -146,4 +154,6 @@ class AddonBase:
     joinList = list()
     quitList = list()
 
-ircBot = IRCBot()
+
+class ConfigurationError(Exception):
+    pass
