@@ -1,5 +1,6 @@
 import socket
 import re
+import yaml
 
 
 class IRCBot:
@@ -157,3 +158,34 @@ class AddonBase:
 
 class ConfigurationError(Exception):
     pass
+
+
+# So that the rest of this works, for now, parse the config file here and create ircBot
+try:
+    with open("irc.yaml", 'r') as settings_file:
+        conf = yaml.load(settings_file)
+    # Print the configuration settings
+    print("=== irc server ===")
+    print("nick: " + conf['user']['nick'])
+    print("pass: " + conf['user']['password'])
+    print("chan: " + conf['channel']['name'])
+    print("netw: " + conf['channel']['network'])
+    print("port: " + conf['channel']['port'])
+
+    print("=== database ==")
+    print("db_name: " + conf['database']['name'])
+    print("db_user: " + conf['database']['user'])
+    print("db_pass: " + conf['database']['pass'])
+    print("db_host: " + conf['database']['host'])
+    print("db_port: " + conf['database']['port'])
+
+    print("=== bot settings ===")
+    print("cmd_pref: " + conf['settings']['prefix'])
+    print("logAll:   " + str(conf['settings']['logAllToConsole']))
+    print("respond:  " + str(conf['settings']['respondToNotFound']))
+
+except FileNotFoundError:
+    print("Config file not found. Make sure irc.yaml exists in this directory.")
+    exit(1)
+
+ircBot = IRCBot(conf)
