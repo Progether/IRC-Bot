@@ -1,6 +1,6 @@
 import psycopg2
 import ircHelpers
-import settings
+import yaml
 
 class DB:
     
@@ -45,14 +45,16 @@ class DB:
 
         
     def db_connect(self):
-        config = settings.read_config()
+        with open("irc.yaml", 'r') as settings_file:
+            conf = yaml.load(settings_file)
         try:
             conn = psycopg2.connect(
-                            database = config['db_name'],
-                            user     = config['db_user'],
-                            password = config['db_pass'],
-                            host     = config['db_host'],
-                            port     = config['db_port'])
+                            database = conf['database']['name'],
+                            user     = conf['database']['user'],
+                            password = conf['database']['pass'],
+                            host     = conf['database']['host'],
+                            port     = conf['database']['port'])
+         
             return conn
         except psycopg2.Error as e:
             print("!! Error connecting to db")

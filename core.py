@@ -26,7 +26,7 @@ class IRCBot:
         self.network = conf['channel']['network']
         self.port = conf['channel']['port']
 
-        self.command_prefix = conf['settings']['command_prefix']
+        self.command_prefix = conf['settings']['prefix']
         self.logAllToConsole = conf['settings']['logAllToConsole']
         self.respondToNotFound = conf['settings']['respondToNotFound']
 
@@ -170,14 +170,14 @@ try:
     print("pass: " + conf['user']['password'])
     print("chan: " + conf['channel']['name'])
     print("netw: " + conf['channel']['network'])
-    print("port: " + conf['channel']['port'])
+    print("port: " + str(conf['channel']['port']))
 
     print("=== database ==")
     print("db_name: " + conf['database']['name'])
     print("db_user: " + conf['database']['user'])
     print("db_pass: " + conf['database']['pass'])
     print("db_host: " + conf['database']['host'])
-    print("db_port: " + conf['database']['port'])
+    print("db_port: " + str(conf['database']['port']))
 
     print("=== bot settings ===")
     print("cmd_pref: " + conf['settings']['prefix'])
