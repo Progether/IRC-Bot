@@ -1,0 +1,18 @@
+user:
+  nick: "progether"
+  password: "progether_bot"
+channel:
+  name: "reddit-progether"
+  network: "irc.freenode.net"
+  port: 6667
+database:
+  name: "d2k2tmq3q2lk62"
+  user: "ddvzstnjeyvtkk"
+  pass: "qiJbYxnbFTlXBAtRiyRkXGkFub"
+  host: ec2-23-23-80-55.compute-1.amazonaws.com
+  port: 5432
+settings:
+  prefix: "!!"
+  logAllToConsole: False
+  respondToNotFound: False
+  
