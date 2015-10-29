@@ -35,8 +35,6 @@ class DB:
     unmanaged_tables = ('logs', 'users', 'tables')
     
     # future table ideas:  
-    #   mail: "_id integer PRIMARY KEY DEFAULT nextval('serial'), sender text NOT NULL, recipient text NOT NULL, time_sent integer NOT NULL, message text NOT NULL"
-    #   proj: "_id integer PRIMARY KEY DEFAULT nextval('serial'), name text NOT NULL, lang text NULL, owner text NOT NULL, link text NULL, descrip text NOT NULL, status text"
     #   user: possibly include timezone settings to localise timestamps on logs, mail etc for each user (maybe with a '!!me' command group)
     
     def __init__(self):
