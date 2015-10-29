@@ -16,7 +16,6 @@ class Mail(AddonBase):
     help_delete = ["%sdelmail [id] :: Delete an old message with ID. Use %smymail to see IDs" % (prefix, prefix),]
 
     def __init__(self):
-        ##TODO verify table exists
         self.title = "mailbox"
         self.commandList = {"mail" : self.send_mail, "mymail" : self.get_mail,   "delmail" : self.delete_mail }
         self.helpList    = {'mail' : self.help_send, 'mymail' : self.help_check, "delmail" : self.help_delete }
