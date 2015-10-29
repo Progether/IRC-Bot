@@ -1,6 +1,7 @@
 import socket
 import re
 import yaml
+import os.path
 
 
 class IRCBot:
@@ -166,8 +167,12 @@ class ConfigurationError(Exception):
 
 # So that the rest of this works, for now, parse the config file here and create ircBot
 try:
-    with open("irc.yaml", 'r') as settings_file:
-        conf = yaml.load(settings_file)
+    if os.path.isfile("irc-test.yaml"):
+        with open("irc-test.yaml", 'r') as settings_file:
+            conf = yaml.load(settings_file)
+    else:
+        with open("irc.yaml", 'r') as settings_file:
+            conf = yaml.load(settings_file)
     # Print the configuration settings
     print("=== irc server ===")
     print("nick: " + conf['user']['nick'])
