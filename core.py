@@ -92,16 +92,20 @@ class IRCBot:
                 isCommand = self.regexIsCommand.match(messageInfo['message'])
                 if isCommand:
                     split = self.regexCommandSplitCommand.match(messageInfo['message'])
-                    commandName = split.group('command')
-                    commandArguments = split.group('arguments')
-                    isAddon = False
-                    for addon in self.addonList:
-                        if commandName in addon.commandList:
-                            addon.commandList[commandName](commandArguments, messageInfo)
-                            isAddon = True
-                    if not isAddon and self.respondToNotFound:
+                    if split is None:
                         string = "NOTICE %s :I don't know that command\r\n" % (messageInfo['user'])
                         self.socket.send(string.encode('UTF-8'))
+                    else:
+                        commandName = split.group('command')
+                        commandArguments = split.group('arguments')
+                        isAddon = False
+                        for addon in self.addonList:
+                            if commandName in addon.commandList:
+                                addon.commandList[commandName](commandArguments, messageInfo)
+                                isAddon = True
+                        if not isAddon and self.respondToNotFound:
+                            string = "NOTICE %s :I don't know that command\r\n" % (messageInfo['user'])
+                            self.socket.send(string.encode('UTF-8'))
 
                 elif messageInfo['channel'] == self.channel:
                     for addon in self.addonList:
